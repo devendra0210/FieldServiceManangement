@@ -1,0 +1,7 @@
+CREATE TABLE part (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    sku VARCHAR(100) UNIQUE NOT NULL,
+    unit_cost DECIMAL(10,2),
+    stock_qty INT DEFAULT 0
+);
