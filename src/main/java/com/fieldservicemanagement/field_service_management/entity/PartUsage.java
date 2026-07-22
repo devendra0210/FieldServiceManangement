@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PartUsage {
 
     @Id
@@ -18,11 +19,11 @@ public class PartUsage {
     @Column(name = "qty_used")
     private Integer qtyUsed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "work_order_id")
     private WorkOrder workOrder;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "part_id")
     private Part part;
 }

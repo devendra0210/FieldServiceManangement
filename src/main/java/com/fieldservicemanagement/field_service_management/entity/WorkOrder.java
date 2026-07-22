@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,12 +12,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WorkOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String code;
 
     private String title;
@@ -30,24 +31,24 @@ public class WorkOrder {
     @Column(name = "sla_due_at")
     private LocalDateTime slaDueAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "site_id")
     private Site site;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "assigned_to")
     private Users assignedTo;
 
-    @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL)
-    private List<TimeLog> timeLogs = new ArrayList<>();
+    @OneToMany(mappedBy = "workOrder")
+    private List<TimeLog> timeLogs;
 
-    @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL)
-    private List<PartUsage> partUsages = new ArrayList<>();
+    @OneToMany(mappedBy = "workOrder")
+    private List<PartUsage> partUsages;
 
-    @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL)
-    private List<WorkOrderStatusHistory> statusHistory = new ArrayList<>();
+    @OneToMany(mappedBy = "workOrder")
+    private List<WorkOrderStatusHistory> statusHistory;
 }

@@ -3,7 +3,7 @@ package com.fieldservicemanagement.field_service_management.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Part {
 
     @Id
@@ -20,15 +21,14 @@ public class Part {
 
     private String name;
 
-    @Column(unique = true)
     private String sku;
 
     @Column(name = "unit_cost")
-    private Double unitCost;
+    private BigDecimal unitCost;
 
     @Column(name = "stock_qty")
     private Integer stockQty;
 
     @OneToMany(mappedBy = "part")
-    private List<PartUsage> partUsages = new ArrayList<>();
+    private List<PartUsage> partUsages;
 }

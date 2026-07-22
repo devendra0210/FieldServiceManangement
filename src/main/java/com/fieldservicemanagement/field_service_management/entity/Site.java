@@ -1,9 +1,7 @@
 package com.fieldservicemanagement.field_service_management.entity;
-
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,6 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Site {
 
     @Id
@@ -22,10 +21,10 @@ public class Site {
 
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL)
-    private List<WorkOrder> workOrders = new ArrayList<>();
+    @OneToMany(mappedBy = "site")
+    private List<WorkOrder> workOrders;
 }

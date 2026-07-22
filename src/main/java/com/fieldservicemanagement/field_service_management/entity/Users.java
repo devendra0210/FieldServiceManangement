@@ -3,7 +3,6 @@ package com.fieldservicemanagement.field_service_management.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,6 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Users {
 
     @Id
@@ -29,11 +29,11 @@ public class Users {
     private String passwordHash;
 
     @OneToMany(mappedBy = "assignedTo")
-    private List<WorkOrder> assignedWorkOrders = new ArrayList<>();
+    private List<WorkOrder> assignedWorkOrders;
 
     @OneToMany(mappedBy = "technician")
-    private List<TimeLog> timeLogs = new ArrayList<>();
+    private List<TimeLog> timeLogs;
 
     @OneToMany(mappedBy = "changedBy")
-    private List<WorkOrderStatusHistory> statusHistory = new ArrayList<>();
+    private List<WorkOrderStatusHistory> statusHistory;
 }

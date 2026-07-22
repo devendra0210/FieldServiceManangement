@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WorkOrderStatusHistory {
 
     @Id
@@ -26,11 +27,11 @@ public class WorkOrderStatusHistory {
     @Column(name = "changed_at")
     private LocalDateTime changedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_order_id")
-    private WorkOrder workOrder;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "changed_by")
     private Users changedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "work_order_id")
+    private WorkOrder workOrder;
 }

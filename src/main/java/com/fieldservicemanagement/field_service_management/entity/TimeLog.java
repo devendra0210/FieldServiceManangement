@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TimeLog {
 
     @Id
@@ -17,14 +18,13 @@ public class TimeLog {
 
     private Integer minutes;
 
-    @Column(columnDefinition = "TEXT")
     private String note;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "work_order_id")
     private WorkOrder workOrder;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "technician_id")
     private Users technician;
 }
