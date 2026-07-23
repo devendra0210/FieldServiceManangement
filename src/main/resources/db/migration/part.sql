@@ -5,5 +5,11 @@ CREATE TABLE part (
     sku VARCHAR(50) UNIQUE,
 
     unit_cost DECIMAL(10,2),
-    stock_qty INTEGER DEFAULT 0
+    stock_qty INTEGER DEFAULT 0,
+
+    created_at TIMESTAMP NOT NULL,
+    created_by BIGINT,
+
+    updated_at TIMESTAMP NOT NULL,
+    updated_by BIGINT
 );

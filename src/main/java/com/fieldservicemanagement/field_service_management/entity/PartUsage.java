@@ -1,5 +1,6 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
+import com.fieldservicemanagement.field_service_management.base.AbsEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,11 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PartUsage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PartUsage extends AbsEntity {
 
     @Column(name = "qty_used")
     private Integer qtyUsed;

@@ -6,6 +6,12 @@ CREATE TABLE part_usage (
 
     qty_used INTEGER NOT NULL,
 
+    created_at TIMESTAMP NOT NULL,
+    created_by BIGINT,
+
+    updated_at TIMESTAMP NOT NULL,
+    updated_by BIGINT,
+
     CONSTRAINT fk_partusage_workorder
         FOREIGN KEY(work_order_id)
         REFERENCES work_order(id),

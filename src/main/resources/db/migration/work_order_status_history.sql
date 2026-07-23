@@ -9,6 +9,12 @@ CREATE TABLE work_order_status_history (
 
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+    created_at TIMESTAMP NOT NULL,
+    created_by BIGINT,
+
+    updated_at TIMESTAMP NOT NULL,
+    updated_by BIGINT,
+
     CONSTRAINT fk_history_workorder
         FOREIGN KEY(work_order_id)
         REFERENCES work_order(id),

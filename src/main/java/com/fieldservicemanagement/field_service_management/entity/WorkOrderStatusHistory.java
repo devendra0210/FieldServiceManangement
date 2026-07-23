@@ -1,5 +1,7 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
+import com.fieldservicemanagement.field_service_management.base.AbsEntity;
+import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,17 +14,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkOrderStatusHistory {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class WorkOrderStatusHistory extends AbsEntity {
 
     @Column(name = "from_status")
-    private String fromStatus;
+    @Enumerated(value = EnumType.STRING)
+    private WorkStatus fromStatus;
 
     @Column(name = "to_status")
-    private String toStatus;
+    @Enumerated(value = EnumType.STRING)
+    private WorkStatus toStatus;
 
     @Column(name = "changed_at")
     private LocalDateTime changedAt;

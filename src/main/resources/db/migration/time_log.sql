@@ -9,6 +9,12 @@ CREATE TABLE time_log (
 
     logged_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+    created_at TIMESTAMP NOT NULL,
+    created_by BIGINT,
+
+    updated_at TIMESTAMP NOT NULL,
+    updated_by BIGINT,
+
     CONSTRAINT fk_timelog_workorder
         FOREIGN KEY(work_order_id)
         REFERENCES work_order(id),
