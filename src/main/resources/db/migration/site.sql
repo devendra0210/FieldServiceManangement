@@ -4,6 +4,12 @@ CREATE TABLE site (
     name VARCHAR(100) NOT NULL,
     address VARCHAR(255),
 
+    created_at TIMESTAMP NOT NULL,
+    created_by BIGINT,
+
+    updated_at TIMESTAMP NOT NULL,
+    updated_by BIGINT,
+
     CONSTRAINT fk_site_customer
         FOREIGN KEY (customer_id)
         REFERENCES customer(id)

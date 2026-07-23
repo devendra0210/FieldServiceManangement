@@ -1,4 +1,5 @@
 package com.fieldservicemanagement.field_service_management.entity;
+import com.fieldservicemanagement.field_service_management.base.AbsEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,11 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Site {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Site extends AbsEntity {
 
     private String name;
 

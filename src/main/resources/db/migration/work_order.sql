@@ -14,6 +14,11 @@ CREATE TABLE work_order (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     sla_due_at TIMESTAMP,
 
+    created_by BIGINT,
+
+    updated_at TIMESTAMP NOT NULL,
+    updated_by BIGINT,
+
     CONSTRAINT fk_workorder_customer
         FOREIGN KEY(customer_id)
         REFERENCES customer(id),

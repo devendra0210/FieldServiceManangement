@@ -1,0 +1,37 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: field-service-management
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:workorder_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cache:
+    type: none
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+
+
+jwt:
+  access-ttl: ${JWT_ACCESS_TTL:2h}
+  refresh-ttl: ${JWT_REFRESH_TTL:1d}
+  secret: ${JWT_SECRET:tzWElMiJ04kIShOyFO20Cq6v3vT974ZK9CbinCj}
+
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /v3/api-docs

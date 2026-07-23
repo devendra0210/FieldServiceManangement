@@ -1,5 +1,6 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
+import com.fieldservicemanagement.field_service_management.base.AbsEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,11 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Customer extends AbsEntity {
 
     @Column(nullable = false)
     private String name;
