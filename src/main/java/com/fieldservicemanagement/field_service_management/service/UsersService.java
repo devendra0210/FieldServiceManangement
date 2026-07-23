@@ -1,6 +1,7 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.dto.Users;
+import com.fieldservicemanagement.field_service_management.enums.RoleName;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class UsersService {
 
         entity.setName(user.getName());
         entity.setEmail(user.getEmail());
-        entity.setRole(user.getRole());
+        entity.setRole(RoleName.valueOf(user.getRole()));
 
         entity = userRepository.save(entity);
 
@@ -66,7 +67,7 @@ public class UsersService {
 
         entity.setName(user.getName());
         entity.setEmail(user.getEmail());
-        entity.setRole(user.getRole());
+        entity.setRole(RoleName.valueOf(user.getRole()));
 
         entity = userRepository.save(entity);
 
@@ -91,7 +92,7 @@ public class UsersService {
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setEmail(entity.getEmail());
-        dto.setRole(entity.getRole());
+        dto.setRole(String.valueOf(entity.getRole()));
 
         return dto;
     }

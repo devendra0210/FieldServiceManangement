@@ -1,6 +1,7 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.dto.WorkOrder;
+import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.repository.SiteRepository;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
@@ -49,7 +50,7 @@ public class WorkOrderService {
         entity.setCode(workOrder.getCode());
         entity.setTitle(workOrder.getTitle());
         entity.setPriority(workOrder.getPriority());
-        entity.setStatus(workOrder.getStatus());
+        entity.setStatus(WorkStatus.valueOf(workOrder.getStatus()));
         entity.setSlaDueAt(workOrder.getSlaDueAt());
 
         entity.setCustomer(customer);
@@ -109,7 +110,7 @@ public class WorkOrderService {
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository.findById(workOrderId)
                 .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found"));
 
-        workOrder.setStatus(status);
+        workOrder.setStatus(WorkStatus.valueOf(status));
 
         return mapToDTO(workOrderRepository.save(workOrder));
     }
@@ -123,7 +124,7 @@ public class WorkOrderService {
         entity.setCode(workOrder.getCode());
         entity.setTitle(workOrder.getTitle());
         entity.setPriority(workOrder.getPriority());
-        entity.setStatus(workOrder.getStatus());
+        entity.setStatus(WorkStatus.valueOf(workOrder.getStatus()));
         entity.setSlaDueAt(workOrder.getSlaDueAt());
 
         entity = workOrderRepository.save(entity);
@@ -146,7 +147,7 @@ public class WorkOrderService {
         dto.setCode(entity.getCode());
         dto.setTitle(entity.getTitle());
         dto.setPriority(entity.getPriority());
-        dto.setStatus(entity.getStatus());
+        dto.setStatus(String.valueOf(entity.getStatus()));
         dto.setSlaDueAt(entity.getSlaDueAt());
 
         dto.setCustomerId(entity.getCustomer().getId());

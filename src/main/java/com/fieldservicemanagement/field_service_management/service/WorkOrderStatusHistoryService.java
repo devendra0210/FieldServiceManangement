@@ -1,6 +1,7 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.dto.WorkOrderStatusHistory;
+import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderStatusHistoryRepository;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
@@ -38,8 +39,8 @@ public class WorkOrderStatusHistoryService {
                 new com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory();
 
         entity.setWorkOrder(workOrder);
-        entity.setFromStatus(history.getFromStatus());
-        entity.setToStatus(history.getToStatus());
+        entity.setFromStatus(WorkStatus.valueOf(history.getFromStatus()));
+        entity.setToStatus(WorkStatus.valueOf(history.getToStatus()));
         entity.setChangedBy(user);
         entity.setChangedAt(history.getChangedAt());
 
@@ -88,8 +89,8 @@ public class WorkOrderStatusHistoryService {
 
         dto.setId(entity.getId());
         dto.setWorkOrderId(entity.getWorkOrder().getId());
-        dto.setFromStatus(entity.getFromStatus());
-        dto.setToStatus(entity.getToStatus());
+        dto.setFromStatus(String.valueOf(entity.getFromStatus()));
+        dto.setToStatus(String.valueOf(entity.getToStatus()));
 
         if (entity.getChangedBy() != null) {
             dto.setChangedBy(String.valueOf(entity.getChangedBy().getId()));
