@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @EntityListeners({AuditingEntityListener.class})
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class AbsEntity {
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

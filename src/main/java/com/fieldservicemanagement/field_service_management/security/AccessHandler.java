@@ -1,40 +1,41 @@
 package com.fieldservicemanagement.field_service_management.security;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fieldservicemanagement.field_service_management.common.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+
 @Component
-public class AuthHandler implements AuthenticationEntryPoint {
+public class AccessHandler implements AccessDeniedHandler {
 
     @Override
-    public void commence(@NonNull HttpServletRequest request,
-                         @NonNull HttpServletResponse response,
-                         @NonNull AuthenticationException authException)
-            throws IOException
-    {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    public void handle(@NonNull HttpServletRequest request,
+                       @NonNull HttpServletResponse response,
+                       @NonNull AccessDeniedException accessDeniedException) throws IOException {
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         response.getWriter().write(mapper.writeValueAsString(
                 ErrorResponse.builder()
-                        .status(401)
+                        .status(403)
                         .success(false)
-                        .message("Authentication required")
+                        .message("Access Denied")
                         .timestamp(LocalDateTime.now())
                         .build()
         ));

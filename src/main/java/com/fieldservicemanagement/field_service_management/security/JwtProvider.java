@@ -1,6 +1,7 @@
 package com.fieldservicemanagement.field_service_management.security;
 
 import com.fieldservicemanagement.field_service_management.config.prop.JwtProp;
+import com.fieldservicemanagement.field_service_management.enums.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -34,12 +37,30 @@ public class JwtProvider {
     public String generateToken(String email, boolean isAccess) {
         long now = System.currentTimeMillis();
         long expire = isAccess ? jwtProp.getAccessTtl().toMillis() : jwtProp.getRefreshTtl().toMillis();
+
+        Map<String, String> claims = new HashMap<>();
+        claims.put("tokenType", isAccess ? TokenType.ACCESS.name() : TokenType.REFRESH.name());
+
         return Jwts.builder()
                 .subject(email)
+                .claims(claims)
                 .issuedAt(new Date())
                 .expiration(new Date(now + expire))
                 .signWith(key)
                 .compact();
+    }
+
+    public boolean isAccessToken(String token) {
+        return getTokenType(token) == TokenType.ACCESS;
+    }
+
+    public boolean isRefreshToken(String token) {
+        return getTokenType(token) == TokenType.REFRESH;
+    }
+
+    public TokenType getTokenType(String token) {
+        String tokenType = extractAllClaims(token).get("tokenType", String.class);
+        return TokenType.valueOf(tokenType);
     }
 
     public boolean isTokenExpired(String token) {

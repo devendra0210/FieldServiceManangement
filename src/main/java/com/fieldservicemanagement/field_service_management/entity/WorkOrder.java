@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
-import com.fieldservicemanagement.field_service_management.base.AbsEntity;
+import com.fieldservicemanagement.field_service_management.base.BaseEntity;
 import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkOrder extends AbsEntity {
+public class WorkOrder extends BaseEntity {
 
     @Column(unique = true)
     private String code;
