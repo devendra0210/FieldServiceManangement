@@ -6,14 +6,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Site {
+public class UsersDTO {
 
     private Long id;
 
-    private Long customerId;
-
     private String name;
 
-    private String address;
+    private String email;
 
+    private String role;
 }

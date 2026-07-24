@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.Site;
+import com.fieldservicemanagement.field_service_management.dto.SiteDTO;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.repository.SiteRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,7 +20,7 @@ public class SiteService {
     private CustomerRepository customerRepository;
 
     // Create Site
-    public Site createSite(Site site) {
+    public SiteDTO createSite(SiteDTO site) {
 
         com.fieldservicemanagement.field_service_management.entity.Customer customer = customerRepository.findById(site.getCustomerId())
                 .orElseThrow(() ->
@@ -38,7 +38,7 @@ public class SiteService {
     }
 
     // Get Site By Id
-    public Site getSiteById(Long id) {
+    public SiteDTO getSiteById(Long id) {
 
         com.fieldservicemanagement.field_service_management.entity.Site entity = siteRepository.findById(id)
                 .orElseThrow(() ->
@@ -48,7 +48,7 @@ public class SiteService {
     }
 
     // Get All Sites
-    public List<Site> getAllSites() {
+    public List<SiteDTO> getAllSites() {
 
         return siteRepository.findAll()
                 .stream()
@@ -57,7 +57,7 @@ public class SiteService {
     }
 
     // Get Sites By Customer
-    public List<Site> getSitesByCustomer(Long customerId) {
+    public List<SiteDTO> getSitesByCustomer(Long customerId) {
 
         return siteRepository.findByCustomerId(customerId)
                 .stream()
@@ -66,7 +66,7 @@ public class SiteService {
     }
 
     // Update Site
-    public Site updateSite(Long id, Site site) {
+    public SiteDTO updateSite(Long id, SiteDTO site) {
 
         com.fieldservicemanagement.field_service_management.entity.Site entity = siteRepository.findById(id)
                 .orElseThrow(() ->
@@ -96,9 +96,9 @@ public class SiteService {
     }
 
     // Entity -> DTO
-    private Site mapToDTO(com.fieldservicemanagement.field_service_management.entity.Site entity) {
+    private SiteDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.Site entity) {
 
-        Site dto = new Site();
+        SiteDTO dto = new SiteDTO();
 
         dto.setId(entity.getId());
         dto.setName(entity.getName());

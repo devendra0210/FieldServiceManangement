@@ -2,22 +2,20 @@ package com.fieldservicemanagement.field_service_management.dto;
 
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Part {
+public class TimeLogDTO {
 
     private Long id;
 
-    private String name;
+    private Long workOrderId;
 
-    private String sku;
+    private Long technicianId;
 
-    private BigDecimal unitCost;
+    private Integer minutes;
 
-    private Integer stockQty;
+    private String note;
 
 }

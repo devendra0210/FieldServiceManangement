@@ -1,6 +1,7 @@
 package com.fieldservicemanagement.field_service_management.controller;
 
-import com.fieldservicemanagement.field_service_management.dto.Customer;
+import com.fieldservicemanagement.field_service_management.base.BaseURL;
+import com.fieldservicemanagement.field_service_management.dto.CustomerDTO;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping(BaseURL.API + BaseURL.CUSTOMERS)
 @CrossOrigin(origins = "*")
 public class CustomerController {
 
@@ -19,38 +20,38 @@ public class CustomerController {
 
     // Create Customer
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customer) {
 
-        Customer createdCustomer = customerService.createCustomer(customer);
+        CustomerDTO createdCustomer = customerService.createCustomer(customer);
 
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
     // Get Customer By Id
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
 
-        Customer customer = customerService.getCustomerById(id);
+        CustomerDTO customer = customerService.getCustomerById(id);
 
         return ResponseEntity.ok(customer);
     }
 
     // Get All Customers
     @GetMapping
-    public ResponseEntity<List<Customer>> getAllCustomers() {
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
 
-        List<Customer> customers = customerService.getAllCustomers();
+        List<CustomerDTO> customers = customerService.getAllCustomers();
 
         return ResponseEntity.ok(customers);
     }
 
     // Update Customer
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(
+    public ResponseEntity<CustomerDTO> updateCustomer(
             @PathVariable Long id,
-            @RequestBody Customer customer) {
+            @RequestBody CustomerDTO customer) {
 
-        Customer updatedCustomer = customerService.updateCustomer(id, customer);
+        CustomerDTO updatedCustomer = customerService.updateCustomer(id, customer);
 
         return ResponseEntity.ok(updatedCustomer);
     }
@@ -61,7 +62,7 @@ public class CustomerController {
 
         customerService.deleteCustomer(id);
 
-        return ResponseEntity.ok("Customer deleted successfully.");
+        return ResponseEntity.noContent().build();
     }
 
 }

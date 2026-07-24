@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.Part;
+import com.fieldservicemanagement.field_service_management.dto.PartDTO;
 import com.fieldservicemanagement.field_service_management.repository.PartRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class PartService {
     private PartRepository partRepository;
 
     // Create Part
-    public Part createPart(Part part) {
+    public PartDTO createPart(PartDTO part) {
 
         com.fieldservicemanagement.field_service_management.entity.Part entity = new com.fieldservicemanagement.field_service_management.entity.Part();
 
@@ -31,7 +31,7 @@ public class PartService {
     }
 
     // Get Part By Id
-    public Part getPartById(Long id) {
+    public PartDTO getPartById(Long id) {
 
         com.fieldservicemanagement.field_service_management.entity.Part entity = partRepository.findById(id)
                 .orElseThrow(() ->
@@ -41,7 +41,7 @@ public class PartService {
     }
 
     // Get All Parts
-    public List<Part> getAllParts() {
+    public List<PartDTO> getAllParts() {
 
         return partRepository.findAll()
                 .stream()
@@ -50,7 +50,7 @@ public class PartService {
     }
 
     // Update Part
-    public Part updatePart(Long id, Part part) {
+    public PartDTO updatePart(Long id, PartDTO part) {
 
         com.fieldservicemanagement.field_service_management.entity.Part entity = partRepository.findById(id)
                 .orElseThrow(() ->
@@ -77,9 +77,9 @@ public class PartService {
     }
 
     // Entity -> DTO
-    private Part mapToDTO(com.fieldservicemanagement.field_service_management.entity.Part entity) {
+    private PartDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.Part entity) {
 
-        Part dto = new Part();
+        PartDTO dto = new PartDTO();
 
         dto.setId(entity.getId());
         dto.setName(entity.getName());

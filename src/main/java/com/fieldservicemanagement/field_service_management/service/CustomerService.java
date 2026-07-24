@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.Customer;
+import com.fieldservicemanagement.field_service_management.dto.CustomerDTO;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     // Create Customer
-    public Customer createCustomer(Customer customer) {
+    public CustomerDTO createCustomer(CustomerDTO customer) {
 
         com.fieldservicemanagement.field_service_management.entity.Customer entity = new com.fieldservicemanagement.field_service_management.entity.Customer();
 
@@ -29,7 +29,7 @@ public class CustomerService {
     }
 
     // Get Customer By Id
-    public Customer getCustomerById(Long id) {
+    public CustomerDTO getCustomerById(Long id) {
 
         com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
                 .orElseThrow(() ->
@@ -39,7 +39,7 @@ public class CustomerService {
     }
 
     // Get All Customers
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
 
         return customerRepository.findAll()
                 .stream()
@@ -48,7 +48,7 @@ public class CustomerService {
     }
 
     // Update Customer
-    public Customer updateCustomer(Long id, Customer customer) {
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customer) {
 
         com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
                 .orElseThrow(() ->
@@ -73,9 +73,9 @@ public class CustomerService {
     }
 
     // Entity -> DTO
-    private Customer mapToDTO(com.fieldservicemanagement.field_service_management.entity.Customer entity) {
+    private CustomerDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.Customer entity) {
 
-        Customer dto = new Customer();
+        CustomerDTO dto = new CustomerDTO();
 
         dto.setId(entity.getId());
         dto.setName(entity.getName());

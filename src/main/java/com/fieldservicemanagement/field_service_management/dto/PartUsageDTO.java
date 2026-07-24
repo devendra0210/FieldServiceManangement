@@ -6,12 +6,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer {
+public class PartUsageDTO {
 
     private Long id;
 
-    private String name;
+    private Long workOrderId;
 
-    private String contactEmail;
+    private Long partId;
+
+    private Integer qtyUsed;
 
 }

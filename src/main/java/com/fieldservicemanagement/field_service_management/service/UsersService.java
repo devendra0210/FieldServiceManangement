@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.Users;
+import com.fieldservicemanagement.field_service_management.dto.UsersDTO;
 import com.fieldservicemanagement.field_service_management.enums.RoleName;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,7 +17,7 @@ public class UsersService {
     private UsersRepository userRepository;
 
     // Create User
-    public Users createUser(Users user) {
+    public UsersDTO createUser(UsersDTO user) {
 
         com.fieldservicemanagement.field_service_management.entity.Users entity = new com.fieldservicemanagement.field_service_management.entity.Users();
 
@@ -31,7 +31,7 @@ public class UsersService {
     }
 
     // Get User By Id
-    public Users getUserById(Long id) {
+    public UsersDTO getUserById(Long id) {
 
         com.fieldservicemanagement.field_service_management.entity.Users entity = userRepository.findById(id)
                 .orElseThrow(() ->
@@ -41,7 +41,7 @@ public class UsersService {
     }
 
     // Get All Users
-    public List<Users> getAllUsers() {
+    public List<UsersDTO> getAllUsers() {
 
         return userRepository.findAll()
                 .stream()
@@ -50,16 +50,16 @@ public class UsersService {
     }
 
     // Get Technicians
-    public List<Users> getTechnicians() {
+    public List<UsersDTO> getTechnicians() {
 
-        return userRepository.findByRole("TECHNICIAN")
+        return userRepository.findByRole("ROLE_TECHNICAL_SPECIALIST")
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     // Update User
-    public Users updateUser(Long id, Users user) {
+    public UsersDTO updateUser(Long id, UsersDTO user) {
 
         com.fieldservicemanagement.field_service_management.entity.Users entity = userRepository.findById(id)
                 .orElseThrow(() ->
@@ -85,9 +85,9 @@ public class UsersService {
     }
 
     // Entity -> DTO
-    private Users mapToDTO(com.fieldservicemanagement.field_service_management.entity.Users entity) {
+    private UsersDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.Users entity) {
 
-        Users dto = new Users();
+        UsersDTO dto = new UsersDTO();
 
         dto.setId(entity.getId());
         dto.setName(entity.getName());

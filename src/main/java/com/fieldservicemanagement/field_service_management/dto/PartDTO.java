@@ -2,18 +2,22 @@ package com.fieldservicemanagement.field_service_management.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PartUsage {
+public class PartDTO {
 
     private Long id;
 
-    private Long workOrderId;
+    private String name;
 
-    private Long partId;
+    private String sku;
 
-    private Integer qtyUsed;
+    private BigDecimal unitCost;
+
+    private Integer stockQty;
 
 }

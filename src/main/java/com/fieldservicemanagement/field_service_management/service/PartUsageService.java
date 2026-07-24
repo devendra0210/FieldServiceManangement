@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.PartUsage;
+import com.fieldservicemanagement.field_service_management.dto.PartUsageDTO;
 import com.fieldservicemanagement.field_service_management.repository.PartRepository;
 import com.fieldservicemanagement.field_service_management.repository.PartUsageRepository;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
@@ -24,7 +24,7 @@ public class PartUsageService {
     private WorkOrderRepository workOrderRepository;
 
     // Add Part Usage
-    public PartUsage addPartUsage(PartUsage partUsage) {
+    public PartUsageDTO createPartUsage(PartUsageDTO partUsage) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository
                 .findById(partUsage.getWorkOrderId())
@@ -57,7 +57,7 @@ public class PartUsageService {
     }
 
     // Get Usage By Id
-    public PartUsage getPartUsageById(Long id) {
+    public PartUsageDTO getPartUsageById(Long id) {
 
         com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
                 partUsageRepository.findById(id)
@@ -68,12 +68,48 @@ public class PartUsageService {
     }
 
     // Get Usage By Work Order
-    public List<PartUsage> getPartUsageByWorkOrder(Long workOrderId) {
+    public List<PartUsageDTO> getPartUsageByWorkOrder(Long workOrderId) {
 
         return partUsageRepository.findByWorkOrderId(workOrderId)
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<PartUsageDTO> getAllPartUsages() {
+
+        return partUsageRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    //Update usage
+
+    public PartUsageDTO updatePartUsage(Long id, PartUsageDTO partUsageDTO) {
+
+        com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
+                partUsageRepository.findById(id)
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("Part Usage not found"));
+
+        com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder =
+                workOrderRepository.findById(partUsageDTO.getWorkOrderId())
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("Work Order not found"));
+
+        com.fieldservicemanagement.field_service_management.entity.Part part =
+                partRepository.findById(partUsageDTO.getPartId())
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("Part not found"));
+
+        entity.setWorkOrder(workOrder);
+        entity.setPart(part);
+        entity.setQtyUsed(partUsageDTO.getQtyUsed());
+
+        entity = partUsageRepository.save(entity);
+
+        return mapToDTO(entity);
     }
 
     // Delete Usage
@@ -94,9 +130,9 @@ public class PartUsageService {
     }
 
     // Entity -> DTO
-    private PartUsage mapToDTO(com.fieldservicemanagement.field_service_management.entity.PartUsage entity) {
+    private PartUsageDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.PartUsage entity) {
 
-        PartUsage dto = new PartUsage();
+        PartUsageDTO dto = new PartUsageDTO();
 
         dto.setId(entity.getId());
         dto.setWorkOrderId(entity.getWorkOrder().getId());

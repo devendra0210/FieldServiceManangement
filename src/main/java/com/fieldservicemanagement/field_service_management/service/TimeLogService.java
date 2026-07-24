@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.TimeLog;
+import com.fieldservicemanagement.field_service_management.dto.TimeLogDTO;
 import com.fieldservicemanagement.field_service_management.repository.TimeLogRepository;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
@@ -24,7 +24,7 @@ public class TimeLogService {
     private UsersRepository userRepository;
 
     // Create Time Log
-    public TimeLog createTimeLog(TimeLog timeLog) {
+    public TimeLogDTO createTimeLog(TimeLogDTO timeLog) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository
                 .findById(timeLog.getWorkOrderId())
@@ -50,7 +50,7 @@ public class TimeLogService {
     }
 
     // Get Time Log By Id
-    public TimeLog getTimeLogById(Long id) {
+    public TimeLogDTO getTimeLogById(Long id) {
 
         com.fieldservicemanagement.field_service_management.entity.TimeLog entity = timeLogRepository
                 .findById(id)
@@ -61,7 +61,7 @@ public class TimeLogService {
     }
 
     // Get All Time Logs
-    public List<TimeLog> getAllTimeLogs() {
+    public List<TimeLogDTO> getAllTimeLogs() {
 
         return timeLogRepository.findAll()
                 .stream()
@@ -70,7 +70,7 @@ public class TimeLogService {
     }
 
     // Get Time Logs By Work Order
-    public List<TimeLog> getTimeLogsByWorkOrder(Long workOrderId) {
+    public List<TimeLogDTO> getTimeLogsByWorkOrder(Long workOrderId) {
 
         return timeLogRepository.findByWorkOrderId(workOrderId)
                 .stream()
@@ -79,7 +79,7 @@ public class TimeLogService {
     }
 
     // Get Time Logs By Technician
-    public List<TimeLog> getTimeLogsByTechnician(Long technicianId) {
+    public List<TimeLogDTO> getTimeLogsByTechnician(Long technicianId) {
 
         return timeLogRepository.findByTechnicianId(technicianId)
                 .stream()
@@ -88,7 +88,7 @@ public class TimeLogService {
     }
 
     // Update Time Log
-    public TimeLog updateTimeLog(Long id, TimeLog timeLog) {
+    public TimeLogDTO updateTimeLog(Long id, TimeLogDTO timeLog) {
 
         com.fieldservicemanagement.field_service_management.entity.TimeLog entity = timeLogRepository
                 .findById(id)
@@ -115,9 +115,9 @@ public class TimeLogService {
     }
 
     // Entity -> DTO
-    private TimeLog mapToDTO(com.fieldservicemanagement.field_service_management.entity.TimeLog entity) {
+    private TimeLogDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.TimeLog entity) {
 
-        TimeLog dto = new TimeLog();
+        TimeLogDTO dto = new TimeLogDTO();
 
         dto.setId(entity.getId());
         dto.setWorkOrderId(entity.getWorkOrder().getId());

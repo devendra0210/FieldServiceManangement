@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.WorkOrder;
+import com.fieldservicemanagement.field_service_management.dto.WorkOrderDTO;
 import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.repository.SiteRepository;
@@ -30,7 +30,7 @@ public class WorkOrderService {
     private UsersRepository userRepository;
 
     // Create Work Order
-    public WorkOrder createWorkOrder(WorkOrder workOrder) {
+    public WorkOrderDTO createWorkOrder(WorkOrderDTO workOrder) {
 
         com.fieldservicemanagement.field_service_management.entity.Customer customer = customerRepository.findById(workOrder.getCustomerId())
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
@@ -63,35 +63,35 @@ public class WorkOrderService {
     }
 
     // Get By Id
-    public WorkOrder getWorkOrderById(Long id) {
+    public WorkOrderDTO getWorkOrderById(Long id) {
 
         return mapToDTO(workOrderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found")));
     }
 
     // Get All
-    public Page<WorkOrder> getAllWorkOrders(Pageable pageable) {
+    public Page<WorkOrderDTO> getAllWorkOrders(Pageable pageable) {
 
         return workOrderRepository.findAll(pageable)
                 .map(this::mapToDTO);
     }
 
     // Get By Status
-    public Page<WorkOrder> getByStatus(String status, Pageable pageable) {
+    public Page<WorkOrderDTO> getByStatus(String status, Pageable pageable) {
 
         return workOrderRepository.findByStatus(status, pageable)
                 .map(this::mapToDTO);
     }
 
     // Get By Priority
-    public Page<WorkOrder> getByPriority(String priority, Pageable pageable) {
+    public Page<WorkOrderDTO> getByPriority(String priority, Pageable pageable) {
 
         return workOrderRepository.findByPriority(priority, pageable)
                 .map(this::mapToDTO);
     }
 
     // Assign Technician
-    public WorkOrder assignTechnician(Long workOrderId, Long technicianId) {
+    public WorkOrderDTO assignTechnician(Long workOrderId, Long technicianId) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository.findById(workOrderId)
                 .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found"));
@@ -105,7 +105,7 @@ public class WorkOrderService {
     }
 
     // Change Status
-    public WorkOrder changeStatus(Long workOrderId, String status) {
+    public WorkOrderDTO changeStatus(Long workOrderId, String status) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository.findById(workOrderId)
                 .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found"));
@@ -116,7 +116,7 @@ public class WorkOrderService {
     }
 
     // Update
-    public WorkOrder updateWorkOrder(Long id, WorkOrder workOrder) {
+    public WorkOrderDTO updateWorkOrder(Long id, WorkOrderDTO workOrder) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder entity = workOrderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found"));
@@ -139,9 +139,9 @@ public class WorkOrderService {
     }
 
     // Entity -> DTO
-    private WorkOrder mapToDTO(com.fieldservicemanagement.field_service_management.entity.WorkOrder entity) {
+    private WorkOrderDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.WorkOrder entity) {
 
-        WorkOrder dto = new WorkOrder();
+        WorkOrderDTO dto = new WorkOrderDTO();
 
         dto.setId(entity.getId());
         dto.setCode(entity.getCode());

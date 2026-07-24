@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.WorkOrderStatusHistory;
+import com.fieldservicemanagement.field_service_management.dto.WorkOrderStatusHistoryDTO;
 import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderStatusHistoryRepository;
@@ -25,7 +25,7 @@ public class WorkOrderStatusHistoryService {
     private UsersRepository userRepository;
 
     // Create Status History
-    public WorkOrderStatusHistory createHistory(WorkOrderStatusHistory history) {
+    public WorkOrderStatusHistoryDTO createHistory(WorkOrderStatusHistoryDTO history) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository
                 .findById(history.getWorkOrderId())
@@ -50,7 +50,7 @@ public class WorkOrderStatusHistoryService {
     }
 
     // Get History By Id
-    public WorkOrderStatusHistory getHistoryById(Long id) {
+    public WorkOrderStatusHistoryDTO getHistoryById(Long id) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity =
                 historyRepository.findById(id)
@@ -60,16 +60,14 @@ public class WorkOrderStatusHistoryService {
         return mapToDTO(entity);
     }
 
-    // Get History By Work Order
-    public List<WorkOrderStatusHistory> getHistory(Long workOrderId) {
+    // Get All History
+    public List<WorkOrderStatusHistoryDTO> getAllHistory() {
 
-        return historyRepository
-                .findByWorkOrderIdOrderByChangedAtAsc(workOrderId)
+        return historyRepository.findAll()
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
-
     // Delete History
     public void deleteHistory(Long id) {
 
@@ -81,11 +79,42 @@ public class WorkOrderStatusHistoryService {
         historyRepository.delete(entity);
     }
 
+    // Update Status History
+    public WorkOrderStatusHistoryDTO updateHistory(
+            Long id,
+            WorkOrderStatusHistoryDTO historyDTO) {
+
+        com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity =
+                historyRepository.findById(id)
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("History not found"));
+
+        com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder =
+                workOrderRepository.findById(historyDTO.getWorkOrderId())
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("Work Order not found"));
+
+        com.fieldservicemanagement.field_service_management.entity.Users user =
+                userRepository.findById(Long.valueOf(historyDTO.getChangedBy()))
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("User not found"));
+
+        entity.setWorkOrder(workOrder);
+        entity.setFromStatus(WorkStatus.valueOf(historyDTO.getFromStatus()));
+        entity.setToStatus(WorkStatus.valueOf(historyDTO.getToStatus()));
+        entity.setChangedBy(user);
+        entity.setChangedAt(historyDTO.getChangedAt());
+
+        entity = historyRepository.save(entity);
+
+        return mapToDTO(entity);
+    }
+
     // Entity -> DTO
-    private WorkOrderStatusHistory mapToDTO(
+    private WorkOrderStatusHistoryDTO mapToDTO(
             com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity) {
 
-        WorkOrderStatusHistory dto = new WorkOrderStatusHistory();
+        WorkOrderStatusHistoryDTO dto = new WorkOrderStatusHistoryDTO();
 
         dto.setId(entity.getId());
         dto.setWorkOrderId(entity.getWorkOrder().getId());

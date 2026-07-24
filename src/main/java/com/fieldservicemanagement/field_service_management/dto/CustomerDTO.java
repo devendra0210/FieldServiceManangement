@@ -6,16 +6,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TimeLog {
+public class CustomerDTO {
 
     private Long id;
 
-    private Long workOrderId;
+    private String name;
 
-    private Long technicianId;
-
-    private Integer minutes;
-
-    private String note;
+    private String contactEmail;
 
 }
