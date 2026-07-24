@@ -5,4 +5,8 @@ public interface BaseURL {
 
     String AUTH = "/auth";
     String LOGIN = "/login";
+    String REFRESH_TOKEN = "/refreshToken";
+
+    String USER = "/user";
+    String ME = "/me";
 }

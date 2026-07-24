@@ -1,5 +1,5 @@
 package com.fieldservicemanagement.field_service_management.entity;
-import com.fieldservicemanagement.field_service_management.base.AbsEntity;
+import com.fieldservicemanagement.field_service_management.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Site extends AbsEntity {
+public class Site extends BaseEntity {
 
     private String name;
 

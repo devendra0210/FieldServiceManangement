@@ -30,6 +30,7 @@ public class SecurityConfig {
     private final AuthenticationProvider jwtProvider;
     private final JwtFilter jwtFilter;
 
+
     private static final String[] whiteList = new String[]{
             "/v3/api-docs/**",
             "/swagger-ui/**",
@@ -49,8 +50,10 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-                .exceptionHandling( ex -> 
-                    ex.accessDeniedHandler(new AuthHandler())
+                .exceptionHandling( ex ->
+                        ex
+                            .accessDeniedHandler(new AccessHandler())
+                            .authenticationEntryPoint(new AuthHandler())
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(jwtProvider)

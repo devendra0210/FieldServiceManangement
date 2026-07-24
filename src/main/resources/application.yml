@@ -14,6 +14,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  hikari:
+    minimum-idle: 5
+    maximum-pool-size: 10
+    idle-timeout: 30000
+    max-lifetime: 1800000
+    connection-timeout: 30000
+    pool-name: HikariCP
   cache:
     type: none
   flyway:
@@ -35,3 +42,8 @@ springdoc:
   api-docs:
     enabled: true
     path: /v3/api-docs
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG

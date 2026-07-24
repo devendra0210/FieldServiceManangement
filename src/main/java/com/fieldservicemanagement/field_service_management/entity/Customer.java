@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
-import com.fieldservicemanagement.field_service_management.base.AbsEntity;
+import com.fieldservicemanagement.field_service_management.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer extends AbsEntity {
+public class Customer extends BaseEntity {
 
     @Column(nullable = false)
     private String name;

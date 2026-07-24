@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
-import com.fieldservicemanagement.field_service_management.base.AbsEntity;
+import com.fieldservicemanagement.field_service_management.base.BaseEntity;
 import com.fieldservicemanagement.field_service_management.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Users extends AbsEntity implements UserDetails {
+public class Users extends BaseEntity implements UserDetails {
 
     private String name;
 
