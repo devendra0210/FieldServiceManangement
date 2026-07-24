@@ -3,7 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.TimeLogDTO;
 import com.fieldservicemanagement.field_service_management.service.TimeLogService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,14 @@ import java.util.List;
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.TIME_LOG)
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class TimeLogController {
 
-    @Autowired
-    private TimeLogService timeLogService;
+    private final TimeLogService timeLogService;
 
     // Create Time Log
     @PostMapping
-    public ResponseEntity<TimeLogDTO> createTimeLog(@RequestBody TimeLogDTO timeLogDTO) {
+    public ResponseEntity<TimeLogDTO> createTimeLog(@RequestBody @Valid TimeLogDTO timeLogDTO) {
 
         TimeLogDTO createdTimeLog = timeLogService.createTimeLog(timeLogDTO);
 
@@ -49,7 +50,7 @@ public class TimeLogController {
     @PutMapping("/{id}")
     public ResponseEntity<TimeLogDTO> updateTimeLog(
             @PathVariable Long id,
-            @RequestBody TimeLogDTO timeLogDTO) {
+            @RequestBody @Valid TimeLogDTO timeLogDTO) {
 
         TimeLogDTO updatedTimeLog =
                 timeLogService.updateTimeLog(id, timeLogDTO);

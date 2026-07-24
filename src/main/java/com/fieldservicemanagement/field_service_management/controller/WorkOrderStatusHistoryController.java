@@ -3,6 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.WorkOrderStatusHistoryDTO;
 import com.fieldservicemanagement.field_service_management.service.WorkOrderStatusHistoryService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +15,15 @@ import java.util.List;
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.WORK_ORDER_STATUS_HISTORY)
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class WorkOrderStatusHistoryController {
 
-    @Autowired
-    private WorkOrderStatusHistoryService workOrderStatusHistoryService;
+    private final WorkOrderStatusHistoryService workOrderStatusHistoryService;
 
     // Create Status History
     @PostMapping
     public ResponseEntity<WorkOrderStatusHistoryDTO> createHistory(
-            @RequestBody WorkOrderStatusHistoryDTO historyDTO) {
+            @RequestBody @Valid WorkOrderStatusHistoryDTO historyDTO) {
 
         WorkOrderStatusHistoryDTO createdHistory =
                 workOrderStatusHistoryService.createHistory(historyDTO);
@@ -53,7 +55,7 @@ public class WorkOrderStatusHistoryController {
     @PutMapping("/{id}")
     public ResponseEntity<WorkOrderStatusHistoryDTO> updateHistory(
             @PathVariable Long id,
-            @RequestBody WorkOrderStatusHistoryDTO historyDTO) {
+            @RequestBody @Valid WorkOrderStatusHistoryDTO historyDTO) {
 
         WorkOrderStatusHistoryDTO updatedHistory =
                 workOrderStatusHistoryService.updateHistory(id, historyDTO);

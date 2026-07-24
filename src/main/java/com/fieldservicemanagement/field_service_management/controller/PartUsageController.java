@@ -3,7 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.PartUsageDTO;
 import com.fieldservicemanagement.field_service_management.service.PartUsageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,14 @@ import java.util.List;
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.PART_USAGE)
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class PartUsageController {
 
-    @Autowired
-    private PartUsageService partUsageService;
+    private final PartUsageService partUsageService;
 
     // Create Part Usage
     @PostMapping
-    public ResponseEntity<PartUsageDTO> createPartUsage(@RequestBody PartUsageDTO partUsageDTO) {
+    public ResponseEntity<PartUsageDTO> createPartUsage(@RequestBody @Valid PartUsageDTO partUsageDTO) {
 
         PartUsageDTO createdPartUsage = partUsageService.createPartUsage(partUsageDTO);
 
@@ -49,7 +50,7 @@ public class PartUsageController {
     @PutMapping("/{id}")
     public ResponseEntity<PartUsageDTO> updatePartUsage(
             @PathVariable Long id,
-            @RequestBody PartUsageDTO partUsageDTO) {
+            @RequestBody @Valid PartUsageDTO partUsageDTO) {
 
         PartUsageDTO updatedPartUsage =
                 partUsageService.updatePartUsage(id, partUsageDTO);

@@ -3,8 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.UsersDTO;
 import com.fieldservicemanagement.field_service_management.service.UsersService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UsersService usersService;
+    private final UsersService usersService;
 
     @GetMapping(BaseURL.ME)
     public String getMe() {
@@ -26,7 +25,7 @@ public class UserController {
 
     // Create User
     @PostMapping
-    public ResponseEntity<UsersDTO> createUser(@RequestBody UsersDTO usersDTO) {
+    public ResponseEntity<UsersDTO> createUser(@RequestBody @Valid UsersDTO usersDTO) {
 
         UsersDTO createdUser = usersService.createUser(usersDTO);
 
@@ -55,7 +54,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UsersDTO> updateUser(
             @PathVariable Long id,
-            @RequestBody UsersDTO usersDTO) {
+            @RequestBody @Valid UsersDTO usersDTO) {
 
         UsersDTO updatedUser = usersService.updateUser(id, usersDTO);
 

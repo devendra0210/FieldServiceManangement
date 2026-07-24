@@ -3,6 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.CustomerDTO;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,14 @@ import java.util.List;
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.CUSTOMERS)
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class CustomerController {
 
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     // Create Customer
     @PostMapping
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customer) {
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody @Valid CustomerDTO customer) {
 
         CustomerDTO createdCustomer = customerService.createCustomer(customer);
 
@@ -49,7 +51,7 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDTO> updateCustomer(
             @PathVariable Long id,
-            @RequestBody CustomerDTO customer) {
+            @RequestBody @Valid CustomerDTO customer) {
 
         CustomerDTO updatedCustomer = customerService.updateCustomer(id, customer);
 

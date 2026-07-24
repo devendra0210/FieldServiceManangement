@@ -3,6 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.SiteDTO;
 import com.fieldservicemanagement.field_service_management.service.SiteService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,14 @@ import java.util.List;
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.SITES)
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class SiteController {
 
-    @Autowired
-    private SiteService siteService;
+    private final SiteService siteService;
 
     // Create Site
     @PostMapping
-    public ResponseEntity<SiteDTO> createSite(@RequestBody SiteDTO siteDTO) {
+    public ResponseEntity<SiteDTO> createSite(@RequestBody @Valid SiteDTO siteDTO) {
 
         SiteDTO createdSite = siteService.createSite(siteDTO);
 
@@ -58,7 +60,7 @@ public class SiteController {
     @PutMapping("/{id}")
     public ResponseEntity<SiteDTO> updateSite(
             @PathVariable Long id,
-            @RequestBody SiteDTO siteDTO) {
+            @RequestBody @Valid SiteDTO siteDTO) {
 
         SiteDTO updatedSite = siteService.updateSite(id, siteDTO);
 

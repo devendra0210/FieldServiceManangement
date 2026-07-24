@@ -3,7 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.WorkOrderDTO;
 import com.fieldservicemanagement.field_service_management.service.WorkOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.WORK_ORDERS)
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class WorkOrderController {
 
-    @Autowired
-    private WorkOrderService workOrderService;
+    private final WorkOrderService workOrderService;
 
     // Create Work Order
     @PostMapping
-    public ResponseEntity<WorkOrderDTO> createWorkOrder(@RequestBody WorkOrderDTO workOrderDTO) {
+    public ResponseEntity<WorkOrderDTO> createWorkOrder(@RequestBody @Valid WorkOrderDTO workOrderDTO) {
 
         WorkOrderDTO createdWorkOrder = workOrderService.createWorkOrder(workOrderDTO);
 
@@ -49,7 +50,7 @@ public class WorkOrderController {
     @PutMapping("/{id}")
     public ResponseEntity<WorkOrderDTO> updateWorkOrder(
             @PathVariable Long id,
-            @RequestBody WorkOrderDTO workOrderDTO) {
+            @RequestBody @Valid WorkOrderDTO workOrderDTO) {
 
         WorkOrderDTO updatedWorkOrder =
                 workOrderService.updateWorkOrder(id, workOrderDTO);

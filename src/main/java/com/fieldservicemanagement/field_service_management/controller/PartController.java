@@ -3,7 +3,8 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.dto.PartDTO;
 import com.fieldservicemanagement.field_service_management.service.PartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,14 @@ import java.util.List;
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.PARTS)
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class PartController {
 
-    @Autowired
-    private PartService partService;
+    private final PartService partService;
 
     // Create Part
     @PostMapping
-    public ResponseEntity<PartDTO> createPart(@RequestBody PartDTO partDTO) {
+    public ResponseEntity<PartDTO> createPart(@RequestBody @Valid PartDTO partDTO) {
 
         PartDTO createdPart = partService.createPart(partDTO);
 
@@ -49,7 +50,7 @@ public class PartController {
     @PutMapping("/{id}")
     public ResponseEntity<PartDTO> updatePart(
             @PathVariable Long id,
-            @RequestBody PartDTO partDTO) {
+            @RequestBody @Valid PartDTO partDTO) {
 
         PartDTO updatedPart = partService.updatePart(id, partDTO);
 
