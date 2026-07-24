@@ -8,7 +8,7 @@ import com.fieldservicemanagement.field_service_management.config.prop.JwtProp;
 import com.fieldservicemanagement.field_service_management.entity.Users;
 import com.fieldservicemanagement.field_service_management.exception.InvalidCredentialsException;
 import com.fieldservicemanagement.field_service_management.exception.UserNotFoundException;
-import com.fieldservicemanagement.field_service_management.repository.UserRepository;
+import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import com.fieldservicemanagement.field_service_management.security.JwtProvider;
 import com.fieldservicemanagement.field_service_management.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
+    private final UsersRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final JwtProp jwtProp;

@@ -2,7 +2,7 @@ package com.fieldservicemanagement.field_service_management.config;
 
 import com.fieldservicemanagement.field_service_management.auditing.ApplicationAuditingAware;
 import com.fieldservicemanagement.field_service_management.exception.UserNotFoundException;
-import com.fieldservicemanagement.field_service_management.repository.UserRepository;
+import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class BeanConfig {
 
-    private final UserRepository userRepository;
+    private final UsersRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {

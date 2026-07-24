@@ -2,7 +2,7 @@ package com.fieldservicemanagement.field_service_management.config;
 
 import com.fieldservicemanagement.field_service_management.entity.Users;
 import com.fieldservicemanagement.field_service_management.enums.RoleName;
-import com.fieldservicemanagement.field_service_management.repository.UserRepository;
+import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
-    private final UserRepository userRepository;
+    private final UsersRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
