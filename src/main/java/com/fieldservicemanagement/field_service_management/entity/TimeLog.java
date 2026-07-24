@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
-import com.fieldservicemanagement.field_service_management.base.AbsEntity;
+import com.fieldservicemanagement.field_service_management.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TimeLog extends AbsEntity {
+public class TimeLog extends BaseEntity {
 
     private Integer minutes;
 

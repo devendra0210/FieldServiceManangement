@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
-import com.fieldservicemanagement.field_service_management.base.AbsEntity;
+import com.fieldservicemanagement.field_service_management.base.BaseEntity;
 import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkOrderStatusHistory extends AbsEntity {
+public class WorkOrderStatusHistory extends BaseEntity {
 
     @Column(name = "from_status")
     @Enumerated(value = EnumType.STRING)

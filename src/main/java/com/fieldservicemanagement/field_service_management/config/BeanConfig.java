@@ -1,5 +1,8 @@
 package com.fieldservicemanagement.field_service_management.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fieldservicemanagement.field_service_management.auditing.ApplicationAuditingAware;
 import com.fieldservicemanagement.field_service_management.exception.UserNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.UserRepository;
@@ -52,4 +55,12 @@ public class BeanConfig {
         return new ApplicationAuditingAware();
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        return mapper;
+    }
 }
