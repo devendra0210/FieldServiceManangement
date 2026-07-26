@@ -68,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (Utils.isPresent(contactEmail)) {
-            predicateList.add(cb.like(root.get("contact_email"), "%" + contactEmail + "%"));
+            predicateList.add(cb.like(root.get("contactEmail"), "%" + contactEmail + "%"));
         }
 
         return cb.and(predicateList.toArray(new Predicate[0]));

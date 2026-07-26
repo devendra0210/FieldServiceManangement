@@ -107,7 +107,7 @@ public class WorkOrderStatusHistoryServiceImpl implements WorkOrderStatusHistory
         List<Predicate> predicateList = new ArrayList<>();
 
         if (Utils.isPresent(workOrderId)) {
-            predicateList.add(cb.like(root.get("work_order_id"), "%" + workOrderId + "%"));
+            predicateList.add(cb.like(root.get("workOrderId"), "%" + workOrderId + "%"));
         }
 
         return cb.and(predicateList.toArray(new Predicate[0]));

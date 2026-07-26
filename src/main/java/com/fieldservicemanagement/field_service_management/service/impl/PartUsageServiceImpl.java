@@ -102,11 +102,11 @@ public class PartUsageServiceImpl implements PartUsageService {
         List<Predicate> predicateList = new ArrayList<>();
 
         if (Utils.isPresent(workOrderId)) {
-            predicateList.add(cb.like(root.get("work_order_id"), "%" + workOrderId + "%"));
+            predicateList.add(cb.like(root.get("workOrderId"), "%" + workOrderId + "%"));
         }
 
         if (Utils.isPresent(partId)) {
-            predicateList.add(cb.like(root.get("part_id"), "%" + partId + "%"));
+            predicateList.add(cb.like(root.get("partId"), "%" + partId + "%"));
         }
 
         return cb.and(predicateList.toArray(new Predicate[0]));

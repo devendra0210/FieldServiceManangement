@@ -99,7 +99,7 @@ public class SiteServiceImpl implements SiteService {
         }
 
         if (Utils.isPresent(customerId)) {
-            predicateList.add(cb.like(root.get("customer_id"), "%" + customerId + "%"));
+            predicateList.add(cb.like(root.get("customerId"), "%" + customerId + "%"));
         }
 
         return cb.and(predicateList.toArray(new Predicate[0]));
