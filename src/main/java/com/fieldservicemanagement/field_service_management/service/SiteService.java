@@ -1,8 +1,8 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 
-import java.util.List;
 
 public interface SiteService {
 
@@ -10,9 +10,7 @@ public interface SiteService {
 
     SiteDTO getSiteById(Long id);
 
-    List<SiteDTO> getAllSites();
-
-    List<SiteDTO> getSitesByCustomer(Long customerId);
+    PageResponse<SiteDTO> getPage(int page, int size, String name, Long customerId);
 
     SiteDTO updateSite(Long id, SiteDTO site);
 

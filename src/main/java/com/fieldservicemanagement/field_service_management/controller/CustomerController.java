@@ -2,6 +2,7 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.CustomerDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,14 @@ public class CustomerController {
 
     // Get All Customers
     @GetMapping
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+    public ResponseEntity<PageResponse<CustomerDTO>> getAllCustomers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String contactEmail) {
 
-        List<CustomerDTO> customers = customerService.getAllCustomers();
+        PageResponse<CustomerDTO> customers =
+                customerService.getPage(page, size, name, contactEmail);
 
         return ResponseEntity.ok(customers);
     }

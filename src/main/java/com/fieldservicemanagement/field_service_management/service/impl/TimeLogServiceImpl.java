@@ -1,14 +1,24 @@
 package com.fieldservicemanagement.field_service_management.service.impl;
 
 import com.fieldservicemanagement.field_service_management.common.dto.TimeLogDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
+import com.fieldservicemanagement.field_service_management.config.helper.Utils;
+import com.fieldservicemanagement.field_service_management.entity.TimeLog;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.TimeLogRepository;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
 import com.fieldservicemanagement.field_service_management.service.TimeLogService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +29,9 @@ public class TimeLogServiceImpl implements TimeLogService {
     private final TimeLogRepository timeLogRepository;
     private final WorkOrderRepository workOrderRepository;
     private final UsersRepository userRepository;
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     // Create Time Log
     public TimeLogDTO createTimeLog(TimeLogDTO timeLog) {
@@ -58,12 +71,62 @@ public class TimeLogServiceImpl implements TimeLogService {
     }
 
     // Get All Time Logs
-    public List<TimeLogDTO> getAllTimeLogs() {
+    @Override
+    public PageResponse<TimeLogDTO> getPage(int page, int size, Long workOrderId, Long technicianId) {
 
-        return timeLogRepository.findAll()
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TimeLog> cq = cb.createQuery(TimeLog.class);
+
+        Root<TimeLog> root = cq.from(TimeLog.class);
+
+        Predicate predicate = getPredicateList(cb, root, workOrderId, technicianId);
+
+        cq.select(root);
+        cq.where(predicate);
+        cq.orderBy(cb.desc(root.get("id")));
+
+        List<TimeLogDTO> content = entityManager.createQuery(cq)
+                .setFirstResult(page * size)
+                .setMaxResults(size)
+                .getResultList()
                 .stream()
                 .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .toList();
+
+        Long count = getCount(cb, entityManager, workOrderId, technicianId);
+
+        if (content.isEmpty()) {
+            return PageResponse.defaultPage();
+        }
+
+        return new PageResponse<>(page, size, count, content);
+    }
+
+    public Predicate getPredicateList(CriteriaBuilder cb, Root<TimeLog> root, Long workOrderId, Long technicianId) {
+
+        List<Predicate> predicateList = new ArrayList<>();
+
+        if (Utils.isPresent(workOrderId)) {
+            predicateList.add(cb.like(root.get("workOrderId"), "%" + workOrderId + "%"));
+        }
+
+        if (Utils.isPresent(technicianId)) {
+            predicateList.add(cb.like(root.get("technicianId"), "%" + technicianId + "%"));
+        }
+
+        return cb.and(predicateList.toArray(new Predicate[0]));
+    }
+
+    public Long getCount(CriteriaBuilder cb, EntityManager entityManager, Long workOrderId, Long technicianId) {
+
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+
+        Root<TimeLog> root = query.from(TimeLog.class);
+
+        Predicate newPredicate = this.getPredicateList(cb, root, workOrderId, technicianId);
+        query.select(cb.count(root)).where(newPredicate);
+
+        return entityManager.createQuery(query).getSingleResult();
     }
 
     // Get Time Logs By Work Order

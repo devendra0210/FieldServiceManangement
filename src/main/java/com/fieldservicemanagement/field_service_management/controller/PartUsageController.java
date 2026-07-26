@@ -2,6 +2,7 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.PartUsageDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.PartUsageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +40,16 @@ public class PartUsageController {
 
     // Get All Part Usages
     @GetMapping
-    public ResponseEntity<List<PartUsageDTO>> getAllPartUsages() {
+    public ResponseEntity<PageResponse<PartUsageDTO>> getAllPartUsage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long workOrderId,
+            @RequestParam(required = false) Long partId) {
 
-        List<PartUsageDTO> partUsages = partUsageService.getAllPartUsages();
+        PageResponse<PartUsageDTO> parts =
+                partUsageService.getPage(page, size, workOrderId, partId);
 
-        return ResponseEntity.ok(partUsages);
+        return ResponseEntity.ok(parts);
     }
 
     // Update Part Usage

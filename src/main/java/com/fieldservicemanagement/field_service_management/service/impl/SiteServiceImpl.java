@@ -1,15 +1,24 @@
 package com.fieldservicemanagement.field_service_management.service.impl;
 
 import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
+import com.fieldservicemanagement.field_service_management.config.helper.Utils;
+import com.fieldservicemanagement.field_service_management.entity.Site;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.repository.SiteRepository;
 import com.fieldservicemanagement.field_service_management.service.SiteService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +26,9 @@ public class SiteServiceImpl implements SiteService {
 
     private final SiteRepository siteRepository;
     private final CustomerRepository customerRepository;
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     // Create Site
     public SiteDTO createSite(SiteDTO site) {
@@ -47,21 +59,62 @@ public class SiteServiceImpl implements SiteService {
     }
 
     // Get All Sites
-    public List<SiteDTO> getAllSites() {
+    @Override
+    public PageResponse<SiteDTO> getPage(int page, int size, String name, Long customerId) {
 
-        return siteRepository.findAll()
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Site> cq = cb.createQuery(Site.class);
+
+        Root<Site> root = cq.from(Site.class);
+
+        Predicate predicate = getPredicateList(cb, root, name, customerId);
+
+        cq.select(root);
+        cq.where(predicate);
+        cq.orderBy(cb.desc(root.get("id")));
+
+        List<SiteDTO> content = entityManager.createQuery(cq)
+                .setFirstResult(page * size)
+                .setMaxResults(size)
+                .getResultList()
                 .stream()
                 .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .toList();
+
+        Long count = getCount(cb, entityManager, name, customerId);
+
+        if (content.isEmpty()) {
+            return PageResponse.defaultPage();
+        }
+
+        return new PageResponse<>(page, size, count, content);
     }
 
-    // Get Sites By Customer
-    public List<SiteDTO> getSitesByCustomer(Long customerId) {
+    public Predicate getPredicateList(CriteriaBuilder cb, Root<Site> root, String name, Long customerId) {
 
-        return siteRepository.findByCustomerId(customerId)
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        List<Predicate> predicateList = new ArrayList<>();
+
+        if (Utils.isPresent(name)) {
+            predicateList.add(cb.like(root.get("name"), "%" + name + "%"));
+        }
+
+        if (Utils.isPresent(customerId)) {
+            predicateList.add(cb.like(root.get("customerId"), "%" + customerId + "%"));
+        }
+
+        return cb.and(predicateList.toArray(new Predicate[0]));
+    }
+
+    public Long getCount(CriteriaBuilder cb, EntityManager entityManager, String name, Long customerId) {
+
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+
+        Root<Site> root = query.from(Site.class);
+
+        Predicate newPredicate = this.getPredicateList(cb, root, name, customerId);
+        query.select(cb.count(root)).where(newPredicate);
+
+        return entityManager.createQuery(query).getSingleResult();
     }
 
     // Update Site

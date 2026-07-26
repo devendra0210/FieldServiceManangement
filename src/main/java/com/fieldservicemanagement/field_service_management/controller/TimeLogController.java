@@ -2,6 +2,7 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.TimeLogDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.TimeLogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +40,16 @@ public class TimeLogController {
 
     // Get All Time Logs
     @GetMapping
-    public ResponseEntity<List<TimeLogDTO>> getAllTimeLogs() {
+    public ResponseEntity<PageResponse<TimeLogDTO>> getAllTimeLog(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long workOrderId,
+            @RequestParam(required = false) Long technicianId) {
 
-        List<TimeLogDTO> timeLogs = timeLogService.getAllTimeLogs();
+        PageResponse<TimeLogDTO> parts =
+                timeLogService.getPage(page, size, workOrderId, technicianId);
 
-        return ResponseEntity.ok(timeLogs);
+        return ResponseEntity.ok(parts);
     }
 
     // Update Time Log

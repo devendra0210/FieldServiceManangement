@@ -2,6 +2,7 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.PartDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.PartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,14 @@ public class PartController {
 
     // Get All Parts
     @GetMapping
-    public ResponseEntity<List<PartDTO>> getAllParts() {
+    public ResponseEntity<PageResponse<PartDTO>> getAllParts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String sku) {
 
-        List<PartDTO> parts = partService.getAllParts();
+        PageResponse<PartDTO> parts =
+                partService.getPage(page, size, name, sku);
 
         return ResponseEntity.ok(parts);
     }

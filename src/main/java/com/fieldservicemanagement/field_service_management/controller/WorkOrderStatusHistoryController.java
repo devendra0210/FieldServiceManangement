@@ -2,6 +2,7 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderStatusHistoryDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.WorkOrderStatusHistoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,15 @@ public class WorkOrderStatusHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WorkOrderStatusHistoryDTO>> getAllHistory() {
+    public ResponseEntity<PageResponse<WorkOrderStatusHistoryDTO>> getAllWorkOrder(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long workOrderId) {
 
-        List<WorkOrderStatusHistoryDTO> history =
-                workOrderStatusHistoryService.getAllHistory();
+        PageResponse<WorkOrderStatusHistoryDTO> parts =
+                workOrderStatusHistoryService.getPage(page, size, workOrderId);
 
-        return ResponseEntity.ok(history);
+        return ResponseEntity.ok(parts);
     }
 
     // Get Status History By Id

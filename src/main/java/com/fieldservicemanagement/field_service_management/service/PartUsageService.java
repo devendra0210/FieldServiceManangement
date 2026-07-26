@@ -4,6 +4,8 @@ import com.fieldservicemanagement.field_service_management.common.dto.PartUsageD
 
 import java.util.List;
 
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
+
 public interface PartUsageService {
 
     PartUsageDTO createPartUsage(PartUsageDTO partUsage);
@@ -12,7 +14,8 @@ public interface PartUsageService {
 
     List<PartUsageDTO> getPartUsageByWorkOrder(Long workOrderId);
 
-    List<PartUsageDTO> getAllPartUsages();
+    PageResponse<PartUsageDTO> getPage(int page, int size, Long workOrderId, Long partId);
+
 
     PartUsageDTO updatePartUsage(Long id, PartUsageDTO partUsageDTO);
 

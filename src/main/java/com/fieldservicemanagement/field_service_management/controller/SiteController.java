@@ -2,6 +2,7 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.SiteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,20 +40,16 @@ public class SiteController {
 
     // Get All Sites
     @GetMapping
-    public ResponseEntity<List<SiteDTO>> getAllSites() {
+    public ResponseEntity<PageResponse<SiteDTO>> getAllSites(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long customerId) {
 
-        List<SiteDTO> sites = siteService.getAllSites();
+        PageResponse<SiteDTO> parts =
+                siteService.getPage(page, size, name, customerId);
 
-        return ResponseEntity.ok(sites);
-    }
-
-    // Get Sites By Customer
-    @GetMapping(BaseURL.CUSTOMERS + "/{customerId}")
-    public ResponseEntity<List<SiteDTO>> getSitesByCustomer(@PathVariable Long customerId) {
-
-        List<SiteDTO> sites = siteService.getSitesByCustomer(customerId);
-
-        return ResponseEntity.ok(sites);
+        return ResponseEntity.ok(parts);
     }
 
     // Update Site
