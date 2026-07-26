@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fieldservicemanagement.field_service_management.auditing.ApplicationAuditingAware;
-import com.fieldservicemanagement.field_service_management.exception.UserNotFoundException;
+import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class BeanConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return token -> userRepository.findByEmail(token)
-                    .orElseThrow(() -> new UserNotFoundException("User not found"));
+                    .orElseThrow(() -> new CustomNotFoundException("User not found"));
     }
 
     @Bean

@@ -1,20 +1,17 @@
 package com.fieldservicemanagement.field_service_management.service.impl;
 
-import com.fieldservicemanagement.field_service_management.dto.WorkOrderDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderDTO;
 import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
+import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.repository.SiteRepository;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
 import com.fieldservicemanagement.field_service_management.service.WorkOrderService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,16 +26,16 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public WorkOrderDTO createWorkOrder(WorkOrderDTO workOrder) {
 
         com.fieldservicemanagement.field_service_management.entity.Customer customer = customerRepository.findById(workOrder.getCustomerId())
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+                .orElseThrow(() -> new CustomNotFoundException("Customer not found"));
 
         com.fieldservicemanagement.field_service_management.entity.Site site = siteRepository.findById(workOrder.getSiteId())
-                .orElseThrow(() -> new EntityNotFoundException("Site not found"));
+                .orElseThrow(() -> new CustomNotFoundException("Site not found"));
 
         com.fieldservicemanagement.field_service_management.entity.Users technician = null;
 
         if (workOrder.getAssignedTo() != null) {
             technician = userRepository.findById(workOrder.getAssignedTo())
-                    .orElseThrow(() -> new EntityNotFoundException("Technician not found"));
+                    .orElseThrow(() -> new CustomNotFoundException("Technician not found"));
         }
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder entity = new com.fieldservicemanagement.field_service_management.entity.WorkOrder();
@@ -62,7 +59,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public WorkOrderDTO getWorkOrderById(Long id) {
 
         return mapToDTO(workOrderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found")));
+                .orElseThrow(() -> new CustomNotFoundException("WorkOrder not found")));
     }
 
     // Get All
@@ -90,10 +87,10 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public WorkOrderDTO assignTechnician(Long workOrderId, Long technicianId) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository.findById(workOrderId)
-                .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found"));
+                .orElseThrow(() -> new CustomNotFoundException("WorkOrder not found"));
 
         com.fieldservicemanagement.field_service_management.entity.Users technician = userRepository.findById(technicianId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new CustomNotFoundException("User not found"));
 
         workOrder.setAssignedTo(technician);
 
@@ -104,7 +101,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public WorkOrderDTO changeStatus(Long workOrderId, String status) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository.findById(workOrderId)
-                .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found"));
+                .orElseThrow(() -> new CustomNotFoundException("WorkOrder not found"));
 
         workOrder.setStatus(WorkStatus.valueOf(status));
 
@@ -115,7 +112,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public WorkOrderDTO updateWorkOrder(Long id, WorkOrderDTO workOrder) {
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder entity = workOrderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("WorkOrder not found"));
+                .orElseThrow(() -> new CustomNotFoundException("WorkOrder not found"));
 
         entity.setCode(workOrder.getCode());
         entity.setTitle(workOrder.getTitle());

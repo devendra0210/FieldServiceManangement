@@ -1,7 +1,7 @@
 package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
-import com.fieldservicemanagement.field_service_management.dto.TimeLogDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.TimeLogDTO;
 import com.fieldservicemanagement.field_service_management.service.TimeLogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

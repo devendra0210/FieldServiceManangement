@@ -1,8 +1,8 @@
-package com.fieldservicemanagement.field_service_management.dto;
+package com.fieldservicemanagement.field_service_management.common.dto;
 
+import com.fieldservicemanagement.field_service_management.enums.RoleName;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -24,9 +24,5 @@ public class UsersDTO {
     private String email;
 
     @NotBlank(message = "Role is required")
-    @Pattern(
-            regexp = "ROLE_ADMIN|ROLE_MANAGER|ROLE_TECHNICAL_SPECIALIST|ROLE_CUSTOMER",
-            message = "Role must be one of: ADMIN, MANAGER, TECHNICIAN"
-    )
-    private String role;
+    private RoleName role;
 }

@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.PartDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.PartDTO;
 
 import java.util.List;
 

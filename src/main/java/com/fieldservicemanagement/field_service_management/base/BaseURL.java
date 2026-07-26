@@ -6,6 +6,7 @@ public interface BaseURL {
     String LOGIN = "/login";
     String REFRESH_TOKEN = "/refreshToken";
     String USER = "/user";
+    String PAGE = "/page";
     String ME = "/me";
     String CUSTOMERS = "/customers";
     String SITES = "/sites";

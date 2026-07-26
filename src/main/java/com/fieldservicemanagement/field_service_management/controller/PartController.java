@@ -1,7 +1,7 @@
 package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
-import com.fieldservicemanagement.field_service_management.dto.PartDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.PartDTO;
 import com.fieldservicemanagement.field_service_management.service.PartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

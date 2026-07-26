@@ -4,6 +4,7 @@ package com.fieldservicemanagement.field_service_management.exception;
 import com.fieldservicemanagement.field_service_management.common.response.ErrorResponse;
 import com.fieldservicemanagement.field_service_management.common.response.Errors;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,8 +18,8 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalException  {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<?> handleUserNotFound(UserNotFoundException e){
+    @ExceptionHandler(CustomNotFoundException.class)
+    public ResponseEntity<?> handleUserNotFound(CustomNotFoundException e){
         return ResponseEntity.status(404).body(errorResponse(404, e.getMessage(), null));
     }
 
@@ -57,6 +58,15 @@ public class GlobalException  {
     @ExceptionHandler(InvalidTokenTypeException.class)
     public ResponseEntity<?> handleInvalidToken(InvalidTokenTypeException ex) {
         return ResponseEntity.status(401).body(errorResponse(401, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleMessageNotReadable(HttpMessageNotReadableException ex) {
+        return ResponseEntity.status(400).body(errorResponse(
+                400,
+                "Role must be one of: ROLE_DISPATCHER, ROLE_TECHNICAL_SPECIALIST, ROLE_ADMIN, ROLE_CUSTOMER, ROLE_MANAGER",
+                null)
+        );
     }
 
     public ErrorResponse errorResponse(int status, String message, List<Errors> errors) {

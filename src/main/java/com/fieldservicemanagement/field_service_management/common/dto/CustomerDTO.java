@@ -1,4 +1,4 @@
-package com.fieldservicemanagement.field_service_management.dto;
+package com.fieldservicemanagement.field_service_management.common.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
