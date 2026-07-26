@@ -2,6 +2,9 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.CustomerDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
+import com.fieldservicemanagement.field_service_management.entity.Site;
+import com.fieldservicemanagement.field_service_management.entity.WorkOrder;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +43,16 @@ public class CustomerController {
 
     // Get All Customers
     @GetMapping
-    public ResponseEntity<Page<CustomerDTO>> getAllCustomers(
+    public ResponseEntity<PageResponse<CustomerDTO>> getAllCustomers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir) {
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String contactEmail,
+            @RequestParam(required = false) List<Site> sites,
+            @RequestParam(required = false) List<WorkOrder> workOrder) {
 
-        Page<CustomerDTO> customers =
-                customerService.getAllCustomers(page, size, sortBy, sortDir);
+        PageResponse<CustomerDTO> customers =
+                customerService.getPage(page, size, name, contactEmail, sites, workOrder);
 
         return ResponseEntity.ok(customers);
     }
