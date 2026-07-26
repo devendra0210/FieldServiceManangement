@@ -1,8 +1,7 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.common.dto.PartDTO;
-import org.springframework.data.domain.Page;
-
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import java.util.List;
 
 public interface PartService {
@@ -11,11 +10,7 @@ public interface PartService {
 
     PartDTO getPartById(Long id);
 
-    Page<PartDTO> getAllParts(
-            int page,
-            int size,
-            String sortBy,
-            String sortDir);
+    PageResponse<PartDTO> getPage(int page, int size, String name, String sku);
 
     PartDTO updatePart(Long id, PartDTO part);
 

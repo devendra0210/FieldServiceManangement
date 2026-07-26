@@ -2,10 +2,10 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderStatusHistoryDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.WorkOrderStatusHistoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,17 +32,15 @@ public class WorkOrderStatusHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<WorkOrderStatusHistoryDTO>> getAllHistory(
+    public ResponseEntity<PageResponse<WorkOrderStatusHistoryDTO>> getAllWorkOrder(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir) {
+            @RequestParam(required = false) Long workOrderId) {
 
-        Page<WorkOrderStatusHistoryDTO> history =
-                workOrderStatusHistoryService.getAllHistory(
-                        page, size, sortBy, sortDir);
+        PageResponse<WorkOrderStatusHistoryDTO> parts =
+                workOrderStatusHistoryService.getPage(page, size, workOrderId);
 
-        return ResponseEntity.ok(history);
+        return ResponseEntity.ok(parts);
     }
 
     // Get Status History By Id

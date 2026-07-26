@@ -1,14 +1,9 @@
 package com.fieldservicemanagement.field_service_management.service.impl;
 
 import com.fieldservicemanagement.field_service_management.common.dto.CustomerDTO;
-import com.fieldservicemanagement.field_service_management.common.dto.UsersDTO;
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.config.helper.Utils;
 import com.fieldservicemanagement.field_service_management.entity.Customer;
-import com.fieldservicemanagement.field_service_management.entity.Site;
-import com.fieldservicemanagement.field_service_management.entity.Users;
-import com.fieldservicemanagement.field_service_management.entity.WorkOrder;
-import com.fieldservicemanagement.field_service_management.enums.RoleName;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
@@ -19,15 +14,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (Utils.isPresent(contactEmail)) {
-            predicateList.add(cb.like(root.get("email"), "%" + contactEmail + "%"));
+            predicateList.add(cb.like(root.get("contact_email"), "%" + contactEmail + "%"));
         }
 
         return cb.and(predicateList.toArray(new Predicate[0]));

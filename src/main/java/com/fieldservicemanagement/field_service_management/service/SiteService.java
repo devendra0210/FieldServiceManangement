@@ -1,9 +1,8 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
-import org.springframework.data.domain.Page;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 
-import java.util.List;
 
 public interface SiteService {
 
@@ -11,18 +10,7 @@ public interface SiteService {
 
     SiteDTO getSiteById(Long id);
 
-    Page<SiteDTO> getAllSites(
-            int page,
-            int size,
-            String sortBy,
-            String sortDir);
-
-    Page<SiteDTO> getSitesByCustomer(
-            Long customerId,
-            int page,
-            int size,
-            String sortBy,
-            String sortDir);
+    PageResponse<SiteDTO> getPage(int page, int size, String name, Long customerId);
 
     SiteDTO updateSite(Long id, SiteDTO site);
 

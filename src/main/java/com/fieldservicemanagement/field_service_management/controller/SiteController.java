@@ -2,10 +2,10 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.SiteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,31 +40,16 @@ public class SiteController {
 
     // Get All Sites
     @GetMapping
-    public ResponseEntity<Page<SiteDTO>> getAllSites(
+    public ResponseEntity<PageResponse<SiteDTO>> getAllSites(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir) {
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long customerId) {
 
-        Page<SiteDTO> sites =
-                siteService.getAllSites(page, size, sortBy, sortDir);
+        PageResponse<SiteDTO> parts =
+                siteService.getPage(page, size, name, customerId);
 
-        return ResponseEntity.ok(sites);
-    }
-
-    // Get Sites By Customer
-    @GetMapping(BaseURL.CUSTOMERS + "/{customerId}")
-    public ResponseEntity<Page<SiteDTO>> getSitesByCustomer(
-            @PathVariable Long customerId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir) {
-
-        Page<SiteDTO> sites = siteService.getSitesByCustomer(
-                customerId, page, size, sortBy, sortDir);
-
-        return ResponseEntity.ok(sites);
+        return ResponseEntity.ok(parts);
     }
 
     // Update Site

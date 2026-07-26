@@ -1,9 +1,7 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderStatusHistoryDTO;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 
 public interface WorkOrderStatusHistoryService {
 
@@ -11,11 +9,7 @@ public interface WorkOrderStatusHistoryService {
 
     WorkOrderStatusHistoryDTO getHistoryById(Long id);
 
-    Page<WorkOrderStatusHistoryDTO> getAllHistory(
-            int page,
-            int size,
-            String sortBy,
-            String sortDir);
+    PageResponse<WorkOrderStatusHistoryDTO> getPage(int page, int size, Long workOrderId);
 
     WorkOrderStatusHistoryDTO updateHistory(Long id, WorkOrderStatusHistoryDTO historyDTO);
 

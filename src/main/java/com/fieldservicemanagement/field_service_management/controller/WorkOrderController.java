@@ -2,11 +2,10 @@ package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.service.WorkOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +38,16 @@ public class WorkOrderController {
 
     // Get All Work Orders
     @GetMapping
-    public ResponseEntity<Page<WorkOrderDTO>> getAllWorkOrders(Pageable pageable) {
+    public ResponseEntity<PageResponse<WorkOrderDTO>> getAllWorkOrder(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) String title) {
 
-        Page<WorkOrderDTO> workOrders = workOrderService.getAllWorkOrders(pageable);
+        PageResponse<WorkOrderDTO> parts =
+                workOrderService.getPage(page, size, code, title);
 
-        return ResponseEntity.ok(workOrders);
+        return ResponseEntity.ok(parts);
     }
 
     // Update Work Order
