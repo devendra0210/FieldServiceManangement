@@ -39,14 +39,14 @@ public class CustomerServiceImpl implements CustomerService {
     private final EntityManager entityManager;
 
     @Override
-    public PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail, List<Site> sites, List<WorkOrder> workOrder) {
+    public PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Customer> cq = cb.createQuery(Customer.class);
 
         Root<Customer> root = cq.from(Customer.class);
 
-        Predicate predicate = getPredicateList(cb, root, name, contactEmail, sites, workOrder);
+        Predicate predicate = getPredicateList(cb, root, name, contactEmail);
 
         cq.select(root);
         cq.where(predicate);
@@ -60,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .map(this::mapToDTO)
                 .toList();
 
-        Long count = getCount(cb, entityManager, name, contactEmail, sites, workOrder);
+        Long count = getCount(cb, entityManager, name, contactEmail);
 
         if (content.isEmpty()) {
             return PageResponse.defaultPage();
@@ -69,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
         return new PageResponse<>(page, size, count, content);
     }
 
-    public Predicate getPredicateList(CriteriaBuilder cb, Root<Customer> root, String name, String contactEmail, List<Site> sites, List<WorkOrder> workOrder) {
+    public Predicate getPredicateList(CriteriaBuilder cb, Root<Customer> root, String name, String contactEmail) {
 
         List<Predicate> predicateList = new ArrayList<>();
 
@@ -81,24 +81,16 @@ public class CustomerServiceImpl implements CustomerService {
             predicateList.add(cb.like(root.get("email"), "%" + contactEmail + "%"));
         }
 
-        if (Utils.isPresent(sites)) {
-            predicateList.add(cb.equal(root.get("sites"), sites));
-        }
-
-        if (Utils.isPresent(workOrder)) {
-            predicateList.add(cb.equal(root.get("Work order"), workOrder));
-        }
-
         return cb.and(predicateList.toArray(new Predicate[0]));
     }
 
-    public Long getCount(CriteriaBuilder cb, EntityManager entityManager, String name, String contactEmail, List<Site> sites, List<WorkOrder> workOrder) {
+    public Long getCount(CriteriaBuilder cb, EntityManager entityManager, String name, String contactEmail) {
 
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
 
         Root<Customer> root = query.from(Customer.class);
 
-        Predicate newPredicate = this.getPredicateList(cb, root, name, contactEmail, sites, workOrder);
+        Predicate newPredicate = this.getPredicateList(cb, root, name, contactEmail);
         query.select(cb.count(root)).where(newPredicate);
 
         return entityManager.createQuery(query).getSingleResult();

@@ -47,12 +47,10 @@ public class CustomerController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String contactEmail,
-            @RequestParam(required = false) List<Site> sites,
-            @RequestParam(required = false) List<WorkOrder> workOrder) {
+            @RequestParam(required = false) String contactEmail) {
 
         PageResponse<CustomerDTO> customers =
-                customerService.getPage(page, size, name, contactEmail, sites, workOrder);
+                customerService.getPage(page, size, name, contactEmail);
 
         return ResponseEntity.ok(customers);
     }

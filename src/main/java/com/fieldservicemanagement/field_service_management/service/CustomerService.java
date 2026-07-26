@@ -16,7 +16,7 @@ public interface CustomerService {
 
     CustomerDTO getCustomerById(Long id);
 
-    PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail, List<Site> sites, List<WorkOrder> workOrder);
+    PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail);
 
     CustomerDTO updateCustomer(Long id, CustomerDTO customer);
 
