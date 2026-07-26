@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.common.dto.CustomerDT
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,14 @@ public class CustomerController {
 
     // Get All Customers
     @GetMapping
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+    public ResponseEntity<Page<CustomerDTO>> getAllCustomers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
 
-        List<CustomerDTO> customers = customerService.getAllCustomers();
+        Page<CustomerDTO> customers =
+                customerService.getAllCustomers(page, size, sortBy, sortDir);
 
         return ResponseEntity.ok(customers);
     }

@@ -1,6 +1,7 @@
 package com.fieldservicemanagement.field_service_management.service;
 
 import com.fieldservicemanagement.field_service_management.common.dto.TimeLogDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,7 +11,11 @@ public interface TimeLogService {
 
     TimeLogDTO getTimeLogById(Long id);
 
-    List<TimeLogDTO> getAllTimeLogs();
+    Page<TimeLogDTO> getAllTimeLogs(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir);
 
     List<TimeLogDTO> getTimeLogsByWorkOrder(Long workOrderId);
 

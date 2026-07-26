@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.common.dto.PartDTO;
 import com.fieldservicemanagement.field_service_management.service.PartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,14 @@ public class PartController {
 
     // Get All Parts
     @GetMapping
-    public ResponseEntity<List<PartDTO>> getAllParts() {
+    public ResponseEntity<Page<PartDTO>> getAllParts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
 
-        List<PartDTO> parts = partService.getAllParts();
+        Page<PartDTO> parts =
+                partService.getAllParts(page, size, sortBy, sortDir);
 
         return ResponseEntity.ok(parts);
     }

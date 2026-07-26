@@ -6,6 +6,10 @@ import com.fieldservicemanagement.field_service_management.repository.CustomerRe
 import com.fieldservicemanagement.field_service_management.repository.SiteRepository;
 import com.fieldservicemanagement.field_service_management.service.SiteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,21 +51,40 @@ public class SiteServiceImpl implements SiteService {
     }
 
     // Get All Sites
-    public List<SiteDTO> getAllSites() {
+    @Override
+    public Page<SiteDTO> getAllSites(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir) {
 
-        return siteRepository.findAll()
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return siteRepository.findAll(pageable)
+                .map(this::mapToDTO);
     }
 
     // Get Sites By Customer
-    public List<SiteDTO> getSitesByCustomer(Long customerId) {
+    @Override
+    public Page<SiteDTO> getSitesByCustomer(
+            Long customerId,
+            int page,
+            int size,
+            String sortBy,
+            String sortDir) {
 
-        return siteRepository.findByCustomerId(customerId)
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return siteRepository.findByCustomerId(customerId, pageable)
+                .map(this::mapToDTO);
     }
 
     // Update Site

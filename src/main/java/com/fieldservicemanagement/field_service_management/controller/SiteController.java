@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
 import com.fieldservicemanagement.field_service_management.service.SiteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,18 +40,29 @@ public class SiteController {
 
     // Get All Sites
     @GetMapping
-    public ResponseEntity<List<SiteDTO>> getAllSites() {
+    public ResponseEntity<Page<SiteDTO>> getAllSites(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
 
-        List<SiteDTO> sites = siteService.getAllSites();
+        Page<SiteDTO> sites =
+                siteService.getAllSites(page, size, sortBy, sortDir);
 
         return ResponseEntity.ok(sites);
     }
 
     // Get Sites By Customer
     @GetMapping(BaseURL.CUSTOMERS + "/{customerId}")
-    public ResponseEntity<List<SiteDTO>> getSitesByCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<Page<SiteDTO>> getSitesByCustomer(
+            @PathVariable Long customerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
 
-        List<SiteDTO> sites = siteService.getSitesByCustomer(customerId);
+        Page<SiteDTO> sites = siteService.getSitesByCustomer(
+                customerId, page, size, sortBy, sortDir);
 
         return ResponseEntity.ok(sites);
     }

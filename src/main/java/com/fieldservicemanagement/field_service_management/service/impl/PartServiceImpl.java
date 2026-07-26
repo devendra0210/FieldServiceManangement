@@ -5,6 +5,10 @@ import com.fieldservicemanagement.field_service_management.exception.CustomNotFo
 import com.fieldservicemanagement.field_service_management.repository.PartRepository;
 import com.fieldservicemanagement.field_service_management.service.PartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,12 +46,21 @@ public class PartServiceImpl implements PartService {
     }
 
     // Get All Parts
-    public List<PartDTO> getAllParts() {
+    @Override
+    public Page<PartDTO> getAllParts(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir) {
 
-        return partRepository.findAll()
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return partRepository.findAll(pageable)
+                .map(this::mapToDTO);
     }
 
     // Update Part

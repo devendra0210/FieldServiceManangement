@@ -7,6 +7,10 @@ import com.fieldservicemanagement.field_service_management.repository.UsersRepos
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
 import com.fieldservicemanagement.field_service_management.service.TimeLogService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,12 +62,21 @@ public class TimeLogServiceImpl implements TimeLogService {
     }
 
     // Get All Time Logs
-    public List<TimeLogDTO> getAllTimeLogs() {
+    @Override
+    public Page<TimeLogDTO> getAllTimeLogs(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir) {
 
-        return timeLogRepository.findAll()
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return timeLogRepository.findAll(pageable)
+                .map(this::mapToDTO);
     }
 
     // Get Time Logs By Work Order

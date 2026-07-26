@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderS
 import com.fieldservicemanagement.field_service_management.service.WorkOrderStatusHistoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,15 @@ public class WorkOrderStatusHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WorkOrderStatusHistoryDTO>> getAllHistory() {
+    public ResponseEntity<Page<WorkOrderStatusHistoryDTO>> getAllHistory(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
 
-        List<WorkOrderStatusHistoryDTO> history =
-                workOrderStatusHistoryService.getAllHistory();
+        Page<WorkOrderStatusHistoryDTO> history =
+                workOrderStatusHistoryService.getAllHistory(
+                        page, size, sortBy, sortDir);
 
         return ResponseEntity.ok(history);
     }

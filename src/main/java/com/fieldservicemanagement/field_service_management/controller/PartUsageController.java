@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.common.dto.PartUsageD
 import com.fieldservicemanagement.field_service_management.service.PartUsageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,14 @@ public class PartUsageController {
 
     // Get All Part Usages
     @GetMapping
-    public ResponseEntity<List<PartUsageDTO>> getAllPartUsages() {
+    public ResponseEntity<Page<PartUsageDTO>> getAllPartUsages(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
 
-        List<PartUsageDTO> partUsages = partUsageService.getAllPartUsages();
+        Page<PartUsageDTO> partUsages =
+                partUsageService.getAllPartUsages(page, size, sortBy, sortDir);
 
         return ResponseEntity.ok(partUsages);
     }

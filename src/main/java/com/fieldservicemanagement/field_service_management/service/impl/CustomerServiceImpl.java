@@ -5,6 +5,10 @@ import com.fieldservicemanagement.field_service_management.exception.CustomNotFo
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,12 +44,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     // Get All Customers
-    public List<CustomerDTO> getAllCustomers() {
+    @Override
+    public Page<CustomerDTO> getAllCustomers(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir) {
 
-        return customerRepository.findAll()
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return customerRepository.findAll(pageable)
+                .map(this::mapToDTO);
     }
 
     // Update Customer
