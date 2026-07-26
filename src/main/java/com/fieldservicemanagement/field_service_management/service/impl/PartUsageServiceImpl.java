@@ -1,13 +1,12 @@
 package com.fieldservicemanagement.field_service_management.service.impl;
 
-import com.fieldservicemanagement.field_service_management.dto.PartUsageDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.PartUsageDTO;
+import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.PartRepository;
 import com.fieldservicemanagement.field_service_management.repository.PartUsageRepository;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
 import com.fieldservicemanagement.field_service_management.service.PartUsageService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,12 +26,12 @@ public class PartUsageServiceImpl implements PartUsageService {
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository
                 .findById(partUsage.getWorkOrderId())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Work Order not found"));
+                        new CustomNotFoundException("Work Order not found"));
 
         com.fieldservicemanagement.field_service_management.entity.Part part = partRepository
                 .findById(partUsage.getPartId())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Part not found"));
+                        new CustomNotFoundException("Part not found"));
 
         if (part.getStockQty() < partUsage.getQtyUsed()) {
             throw new RuntimeException("Insufficient stock available.");
@@ -60,7 +59,7 @@ public class PartUsageServiceImpl implements PartUsageService {
         com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
                 partUsageRepository.findById(id)
                         .orElseThrow(() ->
-                                new EntityNotFoundException("Part Usage not found"));
+                                new CustomNotFoundException("Part Usage not found"));
 
         return mapToDTO(entity);
     }
@@ -89,17 +88,17 @@ public class PartUsageServiceImpl implements PartUsageService {
         com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
                 partUsageRepository.findById(id)
                         .orElseThrow(() ->
-                                new EntityNotFoundException("Part Usage not found"));
+                                new CustomNotFoundException("Part Usage not found"));
 
         com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder =
                 workOrderRepository.findById(partUsageDTO.getWorkOrderId())
                         .orElseThrow(() ->
-                                new EntityNotFoundException("Work Order not found"));
+                                new CustomNotFoundException("Work Order not found"));
 
         com.fieldservicemanagement.field_service_management.entity.Part part =
                 partRepository.findById(partUsageDTO.getPartId())
                         .orElseThrow(() ->
-                                new EntityNotFoundException("Part not found"));
+                                new CustomNotFoundException("Part not found"));
 
         entity.setWorkOrder(workOrder);
         entity.setPart(part);
@@ -116,7 +115,7 @@ public class PartUsageServiceImpl implements PartUsageService {
         com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
                 partUsageRepository.findById(id)
                         .orElseThrow(() ->
-                                new EntityNotFoundException("Part Usage not found"));
+                                new CustomNotFoundException("Part Usage not found"));
 
         // Restore Stock
         com.fieldservicemanagement.field_service_management.entity.Part part = entity.getPart();

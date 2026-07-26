@@ -1,6 +1,6 @@
 package com.fieldservicemanagement.field_service_management.service;
 
-import com.fieldservicemanagement.field_service_management.dto.WorkOrderStatusHistoryDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderStatusHistoryDTO;
 
 import java.util.List;
 

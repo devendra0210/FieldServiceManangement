@@ -1,11 +1,10 @@
 package com.fieldservicemanagement.field_service_management.service.impl;
 
-import com.fieldservicemanagement.field_service_management.dto.PartDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.PartDTO;
+import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.PartRepository;
 import com.fieldservicemanagement.field_service_management.service.PartService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class PartServiceImpl implements PartService {
 
         com.fieldservicemanagement.field_service_management.entity.Part entity = partRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Part not found with id : " + id));
+                        new CustomNotFoundException("Part not found with id : " + id));
 
         return mapToDTO(entity);
     }
@@ -56,7 +55,7 @@ public class PartServiceImpl implements PartService {
 
         com.fieldservicemanagement.field_service_management.entity.Part entity = partRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Part not found with id : " + id));
+                        new CustomNotFoundException("Part not found with id : " + id));
 
         entity.setName(part.getName());
         entity.setSku(part.getSku());
@@ -73,7 +72,7 @@ public class PartServiceImpl implements PartService {
 
         com.fieldservicemanagement.field_service_management.entity.Part entity = partRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Part not found with id : " + id));
+                        new CustomNotFoundException("Part not found with id : " + id));
 
         partRepository.delete(entity);
     }

@@ -1,9 +1,9 @@
 package com.fieldservicemanagement.field_service_management.service.impl;
 
-import com.fieldservicemanagement.field_service_management.dto.CustomerDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.CustomerDTO;
+import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Customer not found with id : " + id));
+                        new CustomNotFoundException("Customer not found with id : " + id));
 
         return mapToDTO(entity);
     }
@@ -53,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Customer not found with id : " + id));
+                        new CustomNotFoundException("Customer not found with id : " + id));
 
         entity.setName(customer.getName());
         entity.setContactEmail(customer.getContactEmail());
@@ -68,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Customer not found with id : " + id));
+                        new CustomNotFoundException("Customer not found with id : " + id));
 
         customerRepository.delete(entity);
     }

@@ -1,11 +1,10 @@
 package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
-import com.fieldservicemanagement.field_service_management.dto.SiteDTO;
+import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
 import com.fieldservicemanagement.field_service_management.service.SiteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

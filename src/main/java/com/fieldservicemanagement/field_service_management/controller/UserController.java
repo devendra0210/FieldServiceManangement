@@ -1,7 +1,11 @@
 package com.fieldservicemanagement.field_service_management.controller;
 
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
-import com.fieldservicemanagement.field_service_management.dto.UsersDTO;
+import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
+import com.fieldservicemanagement.field_service_management.common.dto.UsersDTO;
+import com.fieldservicemanagement.field_service_management.entity.Users;
+import com.fieldservicemanagement.field_service_management.enums.RoleName;
+import com.fieldservicemanagement.field_service_management.security.CurrentUser;
 import com.fieldservicemanagement.field_service_management.service.UsersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.USER)
@@ -19,8 +22,9 @@ public class UserController {
     private final UsersService usersService;
 
     @GetMapping(BaseURL.ME)
-    public String getMe() {
-        return "Success";
+    public ResponseEntity<UsersDTO> getMe(@CurrentUser Users user) {
+        UsersDTO usersDTO = usersService.getUserById(user.getId());
+        return ResponseEntity.ok(usersDTO);
     }
 
     // Create User
@@ -41,13 +45,18 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    // Get All Users
-    @GetMapping
-    public ResponseEntity<List<UsersDTO>> getAllUsers() {
+    // Get Page Users
+    @GetMapping(BaseURL.PAGE)
+    public ResponseEntity<PageResponse<UsersDTO>> getPageUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false)RoleName role
+            ) {
+        PageResponse<UsersDTO> pageResponse = usersService.getPage(page, size, name, email, role);
 
-        List<UsersDTO> users = usersService.getAllUsers();
-
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(pageResponse);
     }
 
     // Update User
