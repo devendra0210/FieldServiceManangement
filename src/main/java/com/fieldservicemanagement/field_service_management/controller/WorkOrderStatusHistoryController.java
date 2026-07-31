@@ -3,6 +3,7 @@ package com.fieldservicemanagement.field_service_management.controller;
 import com.fieldservicemanagement.field_service_management.base.BaseURL;
 import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderStatusHistoryDTO;
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.service.WorkOrderStatusHistoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(BaseURL.API + BaseURL.WORK_ORDER_STATUS_HISTORY)
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class WorkOrderStatusHistoryController {
 
@@ -35,21 +34,20 @@ public class WorkOrderStatusHistoryController {
     public ResponseEntity<PageResponse<WorkOrderStatusHistoryDTO>> getAllWorkOrder(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Long workOrderId) {
+            @RequestParam(required = false) Long workOrderId,
+            @RequestParam(required = false, defaultValue = "ASC") SortDirection sortDirection) {
 
         PageResponse<WorkOrderStatusHistoryDTO> parts =
-                workOrderStatusHistoryService.getPage(page, size, workOrderId);
+                workOrderStatusHistoryService.getPage(page, size, workOrderId, sortDirection);
 
         return ResponseEntity.ok(parts);
     }
 
     // Get Status History By Id
     @GetMapping("/{id}")
-    public ResponseEntity<WorkOrderStatusHistoryDTO> getHistoryById(
-            @PathVariable Long id) {
+    public ResponseEntity<WorkOrderStatusHistoryDTO> getHistoryById(@PathVariable Long id) {
 
-        WorkOrderStatusHistoryDTO history =
-                workOrderStatusHistoryService.getHistoryById(id);
+        WorkOrderStatusHistoryDTO history = workOrderStatusHistoryService.getHistoryById(id);
 
         return ResponseEntity.ok(history);
     }
@@ -60,8 +58,7 @@ public class WorkOrderStatusHistoryController {
             @PathVariable Long id,
             @RequestBody @Valid WorkOrderStatusHistoryDTO historyDTO) {
 
-        WorkOrderStatusHistoryDTO updatedHistory =
-                workOrderStatusHistoryService.updateHistory(id, historyDTO);
+        WorkOrderStatusHistoryDTO updatedHistory = workOrderStatusHistoryService.updateHistory(id, historyDTO);
 
         return ResponseEntity.ok(updatedHistory);
     }

@@ -3,7 +3,9 @@ package com.fieldservicemanagement.field_service_management.service.impl;
 import com.fieldservicemanagement.field_service_management.common.dto.SiteDTO;
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.config.helper.Utils;
+import com.fieldservicemanagement.field_service_management.entity.Customer;
 import com.fieldservicemanagement.field_service_management.entity.Site;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.repository.SiteRepository;
@@ -33,11 +35,11 @@ public class SiteServiceImpl implements SiteService {
     // Create Site
     public SiteDTO createSite(SiteDTO site) {
 
-        com.fieldservicemanagement.field_service_management.entity.Customer customer = customerRepository.findById(site.getCustomerId())
+        Customer customer = customerRepository.findById(site.getCustomerId())
                 .orElseThrow(() ->
                         new CustomNotFoundException("Customer not found with id : " + site.getCustomerId()));
 
-        com.fieldservicemanagement.field_service_management.entity.Site entity = new com.fieldservicemanagement.field_service_management.entity.Site();
+        Site entity = new Site();
 
         entity.setName(site.getName());
         entity.setAddress(site.getAddress());
@@ -51,16 +53,15 @@ public class SiteServiceImpl implements SiteService {
     // Get Site By Id
     public SiteDTO getSiteById(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.Site entity = siteRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Site not found with id : " + id));
+        Site entity = siteRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Site not found with id : " + id));
 
         return mapToDTO(entity);
     }
 
     // Get All Sites
     @Override
-    public PageResponse<SiteDTO> getPage(int page, int size, String name, Long customerId) {
+    public PageResponse<SiteDTO> getPage(int page, int size, String name, Long customerId, SortDirection sortDirection) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Site> cq = cb.createQuery(Site.class);
@@ -71,7 +72,12 @@ public class SiteServiceImpl implements SiteService {
 
         cq.select(root);
         cq.where(predicate);
-        cq.orderBy(cb.desc(root.get("id")));
+
+        if (sortDirection.isAscending()) {
+            cq.orderBy(cb.asc(root.get("id")));
+        } else {
+            cq.orderBy(cb.desc(root.get("id")));
+        }
 
         List<SiteDTO> content = entityManager.createQuery(cq)
                 .setFirstResult(page * size)
@@ -120,11 +126,10 @@ public class SiteServiceImpl implements SiteService {
     // Update Site
     public SiteDTO updateSite(Long id, SiteDTO site) {
 
-        com.fieldservicemanagement.field_service_management.entity.Site entity = siteRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Site not found with id : " + id));
+        Site entity = siteRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Site not found with id : " + id));
 
-        com.fieldservicemanagement.field_service_management.entity.Customer customer = customerRepository.findById(site.getCustomerId())
+        Customer customer = customerRepository.findById(site.getCustomerId())
                 .orElseThrow(() ->
                         new CustomNotFoundException("Customer not found with id : " + site.getCustomerId()));
 
@@ -140,15 +145,14 @@ public class SiteServiceImpl implements SiteService {
     // Delete Site
     public void deleteSite(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.Site entity = siteRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Site not found with id : " + id));
+        Site entity = siteRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Site not found with id : " + id));
 
         siteRepository.delete(entity);
     }
 
     // Entity -> DTO
-    private SiteDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.Site entity) {
+    private SiteDTO mapToDTO(Site entity) {
 
         SiteDTO dto = new SiteDTO();
 

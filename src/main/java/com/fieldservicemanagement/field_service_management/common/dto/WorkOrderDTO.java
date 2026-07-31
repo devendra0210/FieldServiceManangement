@@ -1,5 +1,7 @@
 package com.fieldservicemanagement.field_service_management.common.dto;
 
+import com.fieldservicemanagement.field_service_management.enums.PriorityStatus;
+import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -26,14 +28,14 @@ public class WorkOrderDTO {
             regexp = "LOW|MEDIUM|HIGH|CRITICAL",
             message = "Priority must be one of: LOW, MEDIUM, HIGH, CRITICAL"
     )
-    private String priority;
+    private PriorityStatus priority;
 
     @NotBlank(message = "Status is required")
     @Pattern(
             regexp = "ASSIGNED|IN_PROGRESS|COMPLETED|CANCELLED|CLOSED|OH_HOLD|NEW",
             message = "Status must be one of: OPEN, IN_PROGRESS, COMPLETED, CANCELLED"
     )
-    private String status;
+    private WorkStatus status;
 
     @NotNull(message = "SLA Due Date is required")
     @Future(message = "SLA Due Date must be a future date and time")

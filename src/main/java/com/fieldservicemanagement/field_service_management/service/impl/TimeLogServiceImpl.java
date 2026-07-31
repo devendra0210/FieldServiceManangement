@@ -4,6 +4,9 @@ import com.fieldservicemanagement.field_service_management.common.dto.TimeLogDTO
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.config.helper.Utils;
 import com.fieldservicemanagement.field_service_management.entity.TimeLog;
+import com.fieldservicemanagement.field_service_management.entity.Users;
+import com.fieldservicemanagement.field_service_management.entity.WorkOrder;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.TimeLogRepository;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
@@ -36,18 +39,15 @@ public class TimeLogServiceImpl implements TimeLogService {
     // Create Time Log
     public TimeLogDTO createTimeLog(TimeLogDTO timeLog) {
 
-        com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository
+        WorkOrder workOrder = workOrderRepository
                 .findById(timeLog.getWorkOrderId())
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Work Order not found"));
+                .orElseThrow(() -> new CustomNotFoundException("Work Order not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.Users technician = userRepository
+        Users technician = userRepository
                 .findById(timeLog.getTechnicianId())
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Technician not found"));
+                .orElseThrow(() -> new CustomNotFoundException("Technician not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.TimeLog entity =
-                new com.fieldservicemanagement.field_service_management.entity.TimeLog();
+        TimeLog entity = new TimeLog();
 
         entity.setWorkOrder(workOrder);
         entity.setTechnician(technician);
@@ -62,17 +62,17 @@ public class TimeLogServiceImpl implements TimeLogService {
     // Get Time Log By Id
     public TimeLogDTO getTimeLogById(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.TimeLog entity = timeLogRepository
-                .findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Time Log not found"));
+        TimeLog entity = timeLogRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Time Log not found"));
 
         return mapToDTO(entity);
     }
 
     // Get All Time Logs
     @Override
-    public PageResponse<TimeLogDTO> getPage(int page, int size, Long workOrderId, Long technicianId) {
+    public PageResponse<TimeLogDTO> getPage(
+            int page, int size,
+            Long workOrderId, Long technicianId, SortDirection sortDirection) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<TimeLog> cq = cb.createQuery(TimeLog.class);
@@ -83,7 +83,12 @@ public class TimeLogServiceImpl implements TimeLogService {
 
         cq.select(root);
         cq.where(predicate);
-        cq.orderBy(cb.desc(root.get("id")));
+
+        if (sortDirection.isAscending()) {
+            cq.orderBy(cb.asc(root.get("id")));
+        } else {
+            cq.orderBy(cb.desc(root.get("id")));
+        }
 
         List<TimeLogDTO> content = entityManager.createQuery(cq)
                 .setFirstResult(page * size)
@@ -150,10 +155,8 @@ public class TimeLogServiceImpl implements TimeLogService {
     // Update Time Log
     public TimeLogDTO updateTimeLog(Long id, TimeLogDTO timeLog) {
 
-        com.fieldservicemanagement.field_service_management.entity.TimeLog entity = timeLogRepository
-                .findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Time Log not found"));
+        TimeLog entity = timeLogRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Time Log not found"));
 
         entity.setMinutes(timeLog.getMinutes());
         entity.setNote(timeLog.getNote());
@@ -166,16 +169,14 @@ public class TimeLogServiceImpl implements TimeLogService {
     // Delete Time Log
     public void deleteTimeLog(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.TimeLog entity = timeLogRepository
-                .findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Time Log not found"));
+        TimeLog entity = timeLogRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Time Log not found"));
 
         timeLogRepository.delete(entity);
     }
 
     // Entity -> DTO
-    private TimeLogDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.TimeLog entity) {
+    private TimeLogDTO mapToDTO(TimeLog entity) {
 
         TimeLogDTO dto = new TimeLogDTO();
 

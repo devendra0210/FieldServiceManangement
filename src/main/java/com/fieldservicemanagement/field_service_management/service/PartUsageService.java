@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.common.dto.PartUsageD
 import java.util.List;
 
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 
 public interface PartUsageService {
 
@@ -14,7 +15,7 @@ public interface PartUsageService {
 
     List<PartUsageDTO> getPartUsageByWorkOrder(Long workOrderId);
 
-    PageResponse<PartUsageDTO> getPage(int page, int size, Long workOrderId, Long partId);
+    PageResponse<PartUsageDTO> getPage(int page, int size, Long workOrderId, Long partId, SortDirection sortDirection);
 
 
     PartUsageDTO updatePartUsage(Long id, PartUsageDTO partUsageDTO);

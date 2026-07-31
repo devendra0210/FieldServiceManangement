@@ -1,5 +1,6 @@
 package com.fieldservicemanagement.field_service_management.common.dto;
 
+import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -22,14 +23,14 @@ public class WorkOrderStatusHistoryDTO {
             regexp = "ASSIGNED|IN_PROGRESS|COMPLETED|CANCELLED|CLOSED|OH_HOLD|NEW",
             message = "From Status must be one of: OPEN, IN_PROGRESS, COMPLETED, CANCELLED"
     )
-    private String fromStatus;
+    private WorkStatus fromStatus;
 
     @NotBlank(message = "To Status is required")
     @Pattern(
             regexp = "ASSIGNED|IN_PROGRESS|COMPLETED|CANCELLED|CLOSED|OH_HOLD|NEW",
             message = "To Status must be one of: OPEN, IN_PROGRESS, COMPLETED, CANCELLED"
     )
-    private String toStatus;
+    private WorkStatus toStatus;
 
     @NotBlank(message = "Changed By is required")
     private String changedBy;

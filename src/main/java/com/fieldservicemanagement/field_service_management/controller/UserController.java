@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.common.response.PageR
 import com.fieldservicemanagement.field_service_management.common.dto.UsersDTO;
 import com.fieldservicemanagement.field_service_management.entity.Users;
 import com.fieldservicemanagement.field_service_management.enums.RoleName;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.security.CurrentUser;
 import com.fieldservicemanagement.field_service_management.service.UsersService;
 import jakarta.validation.Valid;
@@ -52,9 +53,10 @@ public class UserController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
-            @RequestParam(required = false)RoleName role
+            @RequestParam(required = false) RoleName role,
+            @RequestParam(required = false, defaultValue = "ASC") SortDirection sortDirection
             ) {
-        PageResponse<UsersDTO> pageResponse = usersService.getPage(page, size, name, email, role);
+        PageResponse<UsersDTO> pageResponse = usersService.getPage(page, size, name, email, role, sortDirection);
 
         return ResponseEntity.ok(pageResponse);
     }
