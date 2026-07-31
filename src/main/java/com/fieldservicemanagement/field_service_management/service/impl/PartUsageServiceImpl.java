@@ -3,7 +3,10 @@ package com.fieldservicemanagement.field_service_management.service.impl;
 import com.fieldservicemanagement.field_service_management.common.dto.PartUsageDTO;
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.config.helper.Utils;
+import com.fieldservicemanagement.field_service_management.entity.Part;
 import com.fieldservicemanagement.field_service_management.entity.PartUsage;
+import com.fieldservicemanagement.field_service_management.entity.WorkOrder;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.PartRepository;
 import com.fieldservicemanagement.field_service_management.repository.PartUsageRepository;
@@ -36,15 +39,13 @@ public class PartUsageServiceImpl implements PartUsageService {
     // Add Part Usage
     public PartUsageDTO createPartUsage(PartUsageDTO partUsage) {
 
-        com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository
+        WorkOrder workOrder = workOrderRepository
                 .findById(partUsage.getWorkOrderId())
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Work Order not found"));
+                .orElseThrow(() -> new CustomNotFoundException("Work Order not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.Part part = partRepository
+        Part part = partRepository
                 .findById(partUsage.getPartId())
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Part not found"));
+                .orElseThrow(() -> new CustomNotFoundException("Part not found"));
 
         if (part.getStockQty() < partUsage.getQtyUsed()) {
             throw new RuntimeException("Insufficient stock available.");
@@ -54,8 +55,7 @@ public class PartUsageServiceImpl implements PartUsageService {
         part.setStockQty(part.getStockQty() - partUsage.getQtyUsed());
         partRepository.save(part);
 
-        com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
-                new com.fieldservicemanagement.field_service_management.entity.PartUsage();
+        PartUsage entity = new PartUsage();
 
         entity.setWorkOrder(workOrder);
         entity.setPart(part);
@@ -67,7 +67,7 @@ public class PartUsageServiceImpl implements PartUsageService {
     }
 
     @Override
-    public PageResponse<PartUsageDTO> getPage(int page, int size, Long workOrderId, Long partId) {
+    public PageResponse<PartUsageDTO> getPage(int page, int size, Long workOrderId, Long partId, SortDirection sortDirection) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<PartUsage> cq = cb.createQuery(PartUsage.class);
@@ -78,7 +78,12 @@ public class PartUsageServiceImpl implements PartUsageService {
 
         cq.select(root);
         cq.where(predicate);
-        cq.orderBy(cb.desc(root.get("id")));
+
+        if (sortDirection.isAscending()) {
+            cq.orderBy(cb.asc(root.get("id")));
+        } else {
+            cq.orderBy(cb.desc(root.get("id")));
+        }
 
         List<PartUsageDTO> content = entityManager.createQuery(cq)
                 .setFirstResult(page * size)
@@ -127,10 +132,8 @@ public class PartUsageServiceImpl implements PartUsageService {
     // Get Usage By Id
     public PartUsageDTO getPartUsageById(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
-                partUsageRepository.findById(id)
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("Part Usage not found"));
+        PartUsage entity = partUsageRepository.findById(id)
+                        .orElseThrow(() -> new CustomNotFoundException("Part Usage not found"));
 
         return mapToDTO(entity);
     }
@@ -148,20 +151,14 @@ public class PartUsageServiceImpl implements PartUsageService {
 
     public PartUsageDTO updatePartUsage(Long id, PartUsageDTO partUsageDTO) {
 
-        com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
-                partUsageRepository.findById(id)
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("Part Usage not found"));
+        PartUsage entity = partUsageRepository.findById(id)
+                        .orElseThrow(() -> new CustomNotFoundException("Part Usage not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder =
-                workOrderRepository.findById(partUsageDTO.getWorkOrderId())
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("Work Order not found"));
+        WorkOrder workOrder = workOrderRepository.findById(partUsageDTO.getWorkOrderId())
+                        .orElseThrow(() -> new CustomNotFoundException("Work Order not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.Part part =
-                partRepository.findById(partUsageDTO.getPartId())
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("Part not found"));
+        Part part = partRepository.findById(partUsageDTO.getPartId())
+                        .orElseThrow(() -> new CustomNotFoundException("Part not found"));
 
         entity.setWorkOrder(workOrder);
         entity.setPart(part);
@@ -175,13 +172,11 @@ public class PartUsageServiceImpl implements PartUsageService {
     // Delete Usage
     public void deletePartUsage(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.PartUsage entity =
-                partUsageRepository.findById(id)
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("Part Usage not found"));
+        PartUsage entity = partUsageRepository.findById(id)
+                        .orElseThrow(() -> new CustomNotFoundException("Part Usage not found"));
 
         // Restore Stock
-        com.fieldservicemanagement.field_service_management.entity.Part part = entity.getPart();
+        Part part = entity.getPart();
 
         part.setStockQty(part.getStockQty() + entity.getQtyUsed());
         partRepository.save(part);
@@ -190,7 +185,7 @@ public class PartUsageServiceImpl implements PartUsageService {
     }
 
     // Entity -> DTO
-    private PartUsageDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.PartUsage entity) {
+    private PartUsageDTO mapToDTO(PartUsage entity) {
 
         PartUsageDTO dto = new PartUsageDTO();
 

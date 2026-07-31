@@ -3,7 +3,10 @@ package com.fieldservicemanagement.field_service_management.service.impl;
 import com.fieldservicemanagement.field_service_management.common.dto.WorkOrderStatusHistoryDTO;
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.config.helper.Utils;
+import com.fieldservicemanagement.field_service_management.entity.Users;
+import com.fieldservicemanagement.field_service_management.entity.WorkOrder;
 import com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.WorkOrderRepository;
@@ -35,21 +38,19 @@ public class WorkOrderStatusHistoryServiceImpl implements WorkOrderStatusHistory
 
     // Create Status History
     public WorkOrderStatusHistoryDTO createHistory(WorkOrderStatusHistoryDTO history) {
-
-        com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder = workOrderRepository
+        WorkOrder workOrder = workOrderRepository
                 .findById(history.getWorkOrderId())
                 .orElseThrow(() -> new CustomNotFoundException("Work Order not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.Users user = userRepository
+        Users user = userRepository
                 .findById(Long.valueOf(history.getChangedBy()))
                 .orElseThrow(() -> new CustomNotFoundException("User not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity =
-                new com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory();
+        WorkOrderStatusHistory entity = new WorkOrderStatusHistory();
 
         entity.setWorkOrder(workOrder);
-        entity.setFromStatus(WorkStatus.valueOf(history.getFromStatus()));
-        entity.setToStatus(WorkStatus.valueOf(history.getToStatus()));
+        entity.setFromStatus(history.getFromStatus());
+        entity.setToStatus(history.getToStatus());
         entity.setChangedBy(user);
         entity.setChangedAt(history.getChangedAt());
 
@@ -60,11 +61,8 @@ public class WorkOrderStatusHistoryServiceImpl implements WorkOrderStatusHistory
 
     // Get History By Id
     public WorkOrderStatusHistoryDTO getHistoryById(Long id) {
-
-        com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity =
-                historyRepository.findById(id)
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("History not found"));
+        WorkOrderStatusHistory entity = historyRepository.findById(id)
+                        .orElseThrow(() -> new CustomNotFoundException("History not found"));
 
         return mapToDTO(entity);
     }
@@ -72,7 +70,7 @@ public class WorkOrderStatusHistoryServiceImpl implements WorkOrderStatusHistory
     // Get All History
 
     @Override
-    public PageResponse<WorkOrderStatusHistoryDTO> getPage(int page, int size, Long workOrderId) {
+    public PageResponse<WorkOrderStatusHistoryDTO> getPage(int page, int size, Long workOrderId, SortDirection sortDirection) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<WorkOrderStatusHistory> cq = cb.createQuery(WorkOrderStatusHistory.class);
@@ -83,7 +81,12 @@ public class WorkOrderStatusHistoryServiceImpl implements WorkOrderStatusHistory
 
         cq.select(root);
         cq.where(predicate);
-        cq.orderBy(cb.desc(root.get("id")));
+
+        if (sortDirection.isAscending()) {
+            cq.orderBy(cb.asc(root.get("id")));
+        } else {
+            cq.orderBy(cb.desc(root.get("id")));
+        }
 
         List<WorkOrderStatusHistoryDTO> content = entityManager.createQuery(cq)
                 .setFirstResult(page * size)
@@ -126,38 +129,30 @@ public class WorkOrderStatusHistoryServiceImpl implements WorkOrderStatusHistory
     }
     // Delete History
     public void deleteHistory(Long id) {
-
-        com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity =
-                historyRepository.findById(id)
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("History not found"));
+        WorkOrderStatusHistory entity = historyRepository.findById(id)
+                        .orElseThrow(() -> new CustomNotFoundException("History not found"));
 
         historyRepository.delete(entity);
     }
 
     // Update Status History
-    public WorkOrderStatusHistoryDTO updateHistory(
-            Long id,
-            WorkOrderStatusHistoryDTO historyDTO) {
+    public WorkOrderStatusHistoryDTO updateHistory(Long id, WorkOrderStatusHistoryDTO historyDTO) {
 
-        com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity =
-                historyRepository.findById(id)
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("History not found"));
+        WorkOrderStatusHistory entity = historyRepository
+                .findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("History not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.WorkOrder workOrder =
-                workOrderRepository.findById(historyDTO.getWorkOrderId())
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("Work Order not found"));
+        WorkOrder workOrder = workOrderRepository
+                .findById(historyDTO.getWorkOrderId())
+                .orElseThrow(() -> new CustomNotFoundException("Work Order not found"));
 
-        com.fieldservicemanagement.field_service_management.entity.Users user =
-                userRepository.findById(Long.valueOf(historyDTO.getChangedBy()))
-                        .orElseThrow(() ->
-                                new CustomNotFoundException("User not found"));
+        Users user = userRepository
+                .findById(Long.valueOf(historyDTO.getChangedBy()))
+                .orElseThrow(() -> new CustomNotFoundException("User not found"));
 
         entity.setWorkOrder(workOrder);
-        entity.setFromStatus(WorkStatus.valueOf(historyDTO.getFromStatus()));
-        entity.setToStatus(WorkStatus.valueOf(historyDTO.getToStatus()));
+        entity.setFromStatus(historyDTO.getFromStatus());
+        entity.setToStatus(historyDTO.getToStatus());
         entity.setChangedBy(user);
         entity.setChangedAt(historyDTO.getChangedAt());
 
@@ -167,15 +162,14 @@ public class WorkOrderStatusHistoryServiceImpl implements WorkOrderStatusHistory
     }
 
     // Entity -> DTO
-    private WorkOrderStatusHistoryDTO mapToDTO(
-            com.fieldservicemanagement.field_service_management.entity.WorkOrderStatusHistory entity) {
+    private WorkOrderStatusHistoryDTO mapToDTO(WorkOrderStatusHistory entity) {
 
         WorkOrderStatusHistoryDTO dto = new WorkOrderStatusHistoryDTO();
 
         dto.setId(entity.getId());
         dto.setWorkOrderId(entity.getWorkOrder().getId());
-        dto.setFromStatus(String.valueOf(entity.getFromStatus()));
-        dto.setToStatus(String.valueOf(entity.getToStatus()));
+        dto.setFromStatus(entity.getFromStatus());
+        dto.setToStatus(entity.getToStatus());
 
         if (entity.getChangedBy() != null) {
             dto.setChangedBy(String.valueOf(entity.getChangedBy().getId()));

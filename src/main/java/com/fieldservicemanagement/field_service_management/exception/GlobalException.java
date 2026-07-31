@@ -9,10 +9,13 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestControllerAdvice
@@ -62,11 +65,22 @@ public class GlobalException  {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<?> handleMessageNotReadable(HttpMessageNotReadableException ex) {
-        return ResponseEntity.status(400).body(errorResponse(
-                400,
-                "Role must be one of: ROLE_DISPATCHER, ROLE_TECHNICAL_SPECIALIST, ROLE_ADMIN, ROLE_CUSTOMER, ROLE_MANAGER",
-                null)
-        );
+        Throwable cause = ex.getCause();
+
+        if (cause instanceof InvalidFormatException invalidFormatException) {
+            Class<?> targetType = invalidFormatException.getTargetType();
+
+            if (targetType.isEnum()) {
+                String values = Arrays.stream(targetType.getEnumConstants())
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", "));
+
+                String message = "Value must be one of: " + values;
+
+                return ResponseEntity.status(400).body(errorResponse(400, message, null));
+            }
+        }
+        return ResponseEntity.status(400).body(errorResponse(400, "Invalid request body", null));
     }
 
     public ErrorResponse errorResponse(int status, String message, List<Errors> errors) {

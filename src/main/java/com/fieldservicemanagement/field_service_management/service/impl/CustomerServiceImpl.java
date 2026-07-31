@@ -4,6 +4,7 @@ import com.fieldservicemanagement.field_service_management.common.dto.CustomerDT
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.config.helper.Utils;
 import com.fieldservicemanagement.field_service_management.entity.Customer;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.CustomerRepository;
 import com.fieldservicemanagement.field_service_management.service.CustomerService;
@@ -29,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final EntityManager entityManager;
 
     @Override
-    public PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail) {
+    public PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail, SortDirection sortDirection) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Customer> cq = cb.createQuery(Customer.class);
@@ -40,7 +41,12 @@ public class CustomerServiceImpl implements CustomerService {
 
         cq.select(root);
         cq.where(predicate);
-        cq.orderBy(cb.desc(root.get("id")));
+
+        if (sortDirection.isAscending()) {
+            cq.orderBy(cb.asc(root.get("id")));
+        } else {
+            cq.orderBy(cb.desc(root.get("id")));
+        }
 
         List<CustomerDTO> content = entityManager.createQuery(cq)
                 .setFirstResult(page * size)
@@ -89,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
     // Create Customer
     public CustomerDTO createCustomer(CustomerDTO customer) {
 
-        com.fieldservicemanagement.field_service_management.entity.Customer entity = new com.fieldservicemanagement.field_service_management.entity.Customer();
+        Customer entity = new Customer();
 
         entity.setName(customer.getName());
         entity.setContactEmail(customer.getContactEmail());
@@ -102,9 +108,8 @@ public class CustomerServiceImpl implements CustomerService {
     // Get Customer By Id
     public CustomerDTO getCustomerById(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Customer not found with id : " + id));
+        Customer entity = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Customer not found with id : " + id));
 
         return mapToDTO(entity);
     }
@@ -112,9 +117,8 @@ public class CustomerServiceImpl implements CustomerService {
     // Update Customer
     public CustomerDTO updateCustomer(Long id, CustomerDTO customer) {
 
-        com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Customer not found with id : " + id));
+        Customer entity = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Customer not found with id : " + id));
 
         entity.setName(customer.getName());
         entity.setContactEmail(customer.getContactEmail());
@@ -127,15 +131,14 @@ public class CustomerServiceImpl implements CustomerService {
     // Delete Customer
     public void deleteCustomer(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.Customer entity = customerRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("Customer not found with id : " + id));
+        Customer entity = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("Customer not found with id : " + id));
 
         customerRepository.delete(entity);
     }
 
     // Entity -> DTO
-    private CustomerDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.Customer entity) {
+    private CustomerDTO mapToDTO(Customer entity) {
 
         CustomerDTO dto = new CustomerDTO();
 

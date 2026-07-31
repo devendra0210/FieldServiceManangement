@@ -6,6 +6,7 @@ import com.fieldservicemanagement.field_service_management.common.response.PageR
 import com.fieldservicemanagement.field_service_management.entity.Site;
 import com.fieldservicemanagement.field_service_management.entity.WorkOrder;
 import com.fieldservicemanagement.field_service_management.enums.RoleName;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface CustomerService {
 
     CustomerDTO getCustomerById(Long id);
 
-    PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail);
+    PageResponse<CustomerDTO> getPage(int page, int size, String name, String contactEmail, SortDirection sortDirection);
 
     CustomerDTO updateCustomer(Long id, CustomerDTO customer);
 

@@ -5,6 +5,7 @@ import com.fieldservicemanagement.field_service_management.config.helper.Utils;
 import com.fieldservicemanagement.field_service_management.common.dto.UsersDTO;
 import com.fieldservicemanagement.field_service_management.entity.Users;
 import com.fieldservicemanagement.field_service_management.enums.RoleName;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 import com.fieldservicemanagement.field_service_management.exception.CustomNotFoundException;
 import com.fieldservicemanagement.field_service_management.repository.UsersRepository;
 import com.fieldservicemanagement.field_service_management.service.UsersService;
@@ -31,7 +32,9 @@ public class UsersServiceImpl implements UsersService {
     private final EntityManager entityManager;
 
     @Override
-    public PageResponse<UsersDTO> getPage(int page, int size, String name, String email, RoleName role) {
+    public PageResponse<UsersDTO> getPage(
+            int page, int size,
+            String name, String email, RoleName role, SortDirection sortDirection) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Users> cq = cb.createQuery(Users.class);
@@ -42,7 +45,12 @@ public class UsersServiceImpl implements UsersService {
 
         cq.select(root);
         cq.where(predicate);
-        cq.orderBy(cb.desc(root.get("id")));
+
+        if (sortDirection.isAscending()) {
+            cq.orderBy(cb.asc(root.get("id")));
+        } else {
+            cq.orderBy(cb.desc(root.get("id")));
+        }
 
         List<UsersDTO> content = entityManager.createQuery(cq)
                 .setFirstResult(page * size)
@@ -95,7 +103,7 @@ public class UsersServiceImpl implements UsersService {
     // Create User
     public UsersDTO createUser(UsersDTO user) {
 
-        com.fieldservicemanagement.field_service_management.entity.Users entity = new com.fieldservicemanagement.field_service_management.entity.Users();
+        Users entity = new Users();
 
         entity.setName(user.getName());
         entity.setEmail(user.getEmail());
@@ -109,9 +117,8 @@ public class UsersServiceImpl implements UsersService {
     // Get User By Id
     public UsersDTO getUserById(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.Users entity = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("User not found with id : " + id));
+        Users entity = userRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("User not found with id : " + id));
 
         return mapToDTO(entity);
     }
@@ -137,9 +144,8 @@ public class UsersServiceImpl implements UsersService {
     // Update User
     public UsersDTO updateUser(Long id, UsersDTO user) {
 
-        com.fieldservicemanagement.field_service_management.entity.Users entity = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("User not found with id : " + id));
+        Users entity = userRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("User not found with id : " + id));
 
         entity.setName(user.getName());
         entity.setEmail(user.getEmail());
@@ -153,15 +159,14 @@ public class UsersServiceImpl implements UsersService {
     // Delete User
     public void deleteUser(Long id) {
 
-        com.fieldservicemanagement.field_service_management.entity.Users entity = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomNotFoundException("User not found with id : " + id));
+        Users entity = userRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException("User not found with id : " + id));
 
         userRepository.delete(entity);
     }
 
     // Entity -> DTO
-    private UsersDTO mapToDTO(com.fieldservicemanagement.field_service_management.entity.Users entity) {
+    private UsersDTO mapToDTO(Users entity) {
 
         UsersDTO dto = new UsersDTO();
 

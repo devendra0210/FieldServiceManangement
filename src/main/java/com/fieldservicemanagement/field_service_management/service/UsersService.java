@@ -3,6 +3,7 @@ package com.fieldservicemanagement.field_service_management.service;
 import com.fieldservicemanagement.field_service_management.common.response.PageResponse;
 import com.fieldservicemanagement.field_service_management.common.dto.UsersDTO;
 import com.fieldservicemanagement.field_service_management.enums.RoleName;
+import com.fieldservicemanagement.field_service_management.enums.SortDirection;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface UsersService {
 
     List<UsersDTO> getAllUsers();
 
-    PageResponse<UsersDTO> getPage(int page, int size, String name, String email, RoleName role);
+    PageResponse<UsersDTO> getPage(int page, int size, String name, String email, RoleName role, SortDirection sortDirection);
 
     List<UsersDTO> getTechnicians();
 

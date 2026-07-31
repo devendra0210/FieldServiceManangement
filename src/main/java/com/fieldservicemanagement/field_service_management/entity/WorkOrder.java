@@ -1,6 +1,7 @@
 package com.fieldservicemanagement.field_service_management.entity;
 
 import com.fieldservicemanagement.field_service_management.base.BaseEntity;
+import com.fieldservicemanagement.field_service_management.enums.PriorityStatus;
 import com.fieldservicemanagement.field_service_management.enums.WorkStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +23,8 @@ public class WorkOrder extends BaseEntity {
 
     private String title;
 
-    private String priority;
+    @Enumerated(value = EnumType.STRING)
+    private PriorityStatus priority;
 
     @Enumerated(value = EnumType.STRING)
     private WorkStatus status;
